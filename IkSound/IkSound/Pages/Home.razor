@@ -1,0 +1,21 @@
+﻿@page "/"
+@using System.Text.Json
+@using IkSound.Models.Epidemic
+@using IkSound.Utils
+@inject HttpClient Http
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+@code
+{
+    private Root? Root { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Root = await Http.GetFromJsonAsync<Root>(HttpUtils.GetUrl("json/search/sfx/?limit=10"));
+    }
+}
