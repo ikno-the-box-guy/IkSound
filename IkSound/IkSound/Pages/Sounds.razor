@@ -1,6 +1,101 @@
 ﻿@page "/sounds"
-<h3>Sound Effects</h3>
+@using System.Net
+@using IkSound.Models.Epidemic.Sfx
+@using IkSound.Utils
+@using IkSound.Components
+@inject HttpClient Http
+
+@if(Page != null && Genre != null)
+{
+    <h1>@Page.Value</h1>
+    <h1>@Genre</h1>
+}
+
+<div class="container">
+    <h3>Sound Effects</h3>
+    
+    <form @onsubmit="Search" class="mt-2">
+        <input type="text" class="form-control" id="search" placeholder="Search" @bind="SearchTerm"/>
+    </form>
+</div>
+
+<div class="container mt-4">
+    <h3>Tags</h3>
+    
+    <div class="row mt-2">
+        @if (GenresTree.Count == 0)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            <GenreColumn Genres="@GenresTree[SfxRootId].Take(GenresTree[SfxRootId].Count / 3)" GenresTree="@GenresTree"/>
+            <GenreColumn Genres="@GenresTree[SfxRootId].GetRange(GenresTree[SfxRootId].Count / 3, GenresTree[SfxRootId].Count / 3)" GenresTree="@GenresTree"/>
+            <GenreColumn Genres="@GenresTree[SfxRootId].Skip(GenresTree[SfxRootId].Count / 3 * 2)" GenresTree="@GenresTree"/>
+        }
+    </div>
+</div>
 
 @code {
+    string SearchTerm { get; set; } = "";
+
+    [Parameter] [SupplyParameterFromQuery] public int? Page { get; set; }
+    [Parameter] [SupplyParameterFromQuery] public string? Genre { get; set; }
+
+    void Search(EventArgs e)
+    {
+        if(string.IsNullOrWhiteSpace(SearchTerm))
+        {
+            return;
+        }
+        
+        Console.WriteLine($"Term: {SearchTerm}");
+    }
+
+    Dictionary<string, List<SfxGenre>> GenresTree { get; set; } = new Dictionary<string, List<SfxGenre>>();
+    string SfxRootId { get; set; } = "";
+        
+    protected override async Task OnInitializedAsync()
+    {
+        SfxGenreRoot? genreRoot = await Http.GetFromJsonAsync<SfxGenreRoot>(HttpUtils.GetUrl("json/tags/?sfx_tag=true"));
+        
+        if(genreRoot == null)
+        {
+            Console.WriteLine("Failed to fetch genre root");
+            return;
+        }
+        
+        var tree = ResolveGenresTree(genreRoot.Genres);
+        GenresTree = tree.Item1;
+        SfxRootId = tree.Item2;
+    }
     
+    private (Dictionary<string, List<SfxGenre>>, string) ResolveGenresTree(ICollection<SfxGenre> genres)
+    {
+        Dictionary<string, List<SfxGenre>> genreDictionary = new Dictionary<string, List<SfxGenre>>();
+        HashSet<string> genreIds = new HashSet<string>();
+        
+        foreach(SfxGenre genre in genres)
+        {
+            genreIds.Add(genre.Id);
+            
+            if (!genreDictionary.ContainsKey(genre.FatherGenreId))
+                genreDictionary.Add(genre.FatherGenreId, new List<SfxGenre>());
+            
+            List<SfxGenre> genreList = genreDictionary[genre.FatherGenreId];
+            genreList.Add(genre);
+        }
+        
+        string sfxRootId = "";
+        foreach (string fatherId in genreDictionary.Keys)
+        {
+            if (!genreIds.Contains(fatherId))
+            {
+                sfxRootId = fatherId;
+                break;
+            }
+        }
+
+        return (genreDictionary, sfxRootId);
+    }
 }

@@ -1,0 +1,34 @@
+﻿@using IkSound.Models.Epidemic.Sfx
+@inject NavigationManager NavigationManager
+
+<div class="col">
+    @foreach(var genre in Genres)
+    {
+        <form method="get" @onsubmit="() => Search(genre.Slug)">
+            <input class="border-0 bg-transparent text-body-emphasis" type="submit" value="@genre.DisplayTag"/>
+        </form>
+        <ul class="list-unstyled">
+            @foreach (var subGenre in GenresTree[genre.Id])
+            {
+                <li>
+                    <form method="get" @onsubmit="() => Search(subGenre.Slug)">
+                        <input class="border-0 bg-transparent text-body-tertiary" type="submit" value="@subGenre.DisplayTag"/>
+                    </form>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Dictionary<string, List<SfxGenre>> GenresTree { get; set; }
+    
+    [Parameter]
+    public IEnumerable<SfxGenre> Genres { get; set; }
+    
+    void Search(string genre)
+    {
+        NavigationManager.NavigateTo($"/sounds?Page=1&Genre={genre}");
+    }
+}

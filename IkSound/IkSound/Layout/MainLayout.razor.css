@@ -13,7 +13,7 @@ main {
 }
 
 .top-row {
-    filter: dropShadow(0 -10px 0.5rem white); /* TODO: Fix this */
+    background: rgba(0, 0, 0, 0.2);
     justify-content: flex-end;
     height: 3.5rem;
     display: flex;
