@@ -1,0 +1,44 @@
+﻿@using IkSound.Models.Epidemic
+@using IkSound.Models.Epidemic.Sfx
+@using IkSound.Utils
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+@if(Songs != null)
+{
+    <div class="container">
+        <h1>Search: @SearchTerm</h1>
+        <div class="col">
+            @foreach (Song song in Songs)
+            {
+                <SongCard Song="@song" @key="song.Id"/>
+            }
+        </div>
+    </div>
+}
+
+
+@code {
+    ICollection<Song>? Songs { get; set; }
+    int Page { get; set; } = 1;
+    
+    [Parameter] public string? SearchTerm { get; set; }
+    [Parameter] public string? Genre { get; set; }
+    [Parameter] public bool Sfx { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(SearchTerm == null && Genre == null)
+        {
+            NavigationManager.NavigateTo("/sounds");
+        }
+
+        string term = SearchTerm == null ? "" : $"&term={SearchTerm}";
+        string genre = Genre == null ? "" : $"&genres={Genre}";
+        
+        string url = $"json/search/{(Sfx ? "sfx" : "tracks")}/?limit=10&page={Page}{term}{genre}";
+        Root? root = await Http.GetFromJsonAsync<Root>(HttpUtils.GetUrl(url));
+        
+        Songs = root?.Entities.Tracks.Values;
+    }
+}

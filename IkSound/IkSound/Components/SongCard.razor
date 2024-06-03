@@ -1,0 +1,20 @@
+﻿@using IkSound.Models.Epidemic
+
+<div class="song-container w-100 d-flex flex-row m-2">
+    <img class="h-100" src="@(Song.CoverArt.BaseUrl + Song.CoverArt.Sizes.XS)" alt="@Song.Title"/>
+    
+    <div class="col p-2">
+        <h2 class="text-truncate mw-100">@Song.Title</h2>
+        <audio controls src="@Song.Stems["full"].LqMp3Url"></audio>
+    </div>
+    
+    <div class="p-2 text-body-tertiary">
+        <span>A, </span>
+        <span>B, </span>
+        <span>C</span>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Song Song { get; set; } = null!;
+}

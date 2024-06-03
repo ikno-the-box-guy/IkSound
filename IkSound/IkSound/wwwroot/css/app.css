@@ -86,3 +86,21 @@ h1:focus {
 code {
     color: #c02d76;
 }
+
+@property --gradient-end {
+    syntax: '<color>';
+    initial-value: #212529;
+    inherits: false;
+}
+
+.song-container {
+    /*background: #181b1e;*/
+    background-image: linear-gradient(90deg, #181b1e 20%, var(--gradient-end) 90%);
+    
+    
+    transition: --gradient-end .1s ease-in-out;
+}
+
+.song-container:hover {
+    --gradient-end: #181b1e;
+}

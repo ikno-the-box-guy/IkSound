@@ -4,11 +4,14 @@
 @using IkSound.Utils
 @using IkSound.Components
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 
-@if(Page != null && Genre != null)
+@if(Genre != null)
 {
-    <h1>@Page.Value</h1>
-    <h1>@Genre</h1>
+    <SearchComponent SearchTerm="@SearchTerm" Genre="@Genre" Sfx="@false" @key="Genre"/>
+} else if (SearchTerm != null)
+{
+    <SearchComponent SearchTerm="@SearchTerm" Sfx="@false" @key="SearchTerm"/>
 }
 
 <div class="container">
@@ -37,9 +40,9 @@
 </div>
 
 @code {
-    string SearchTerm { get; set; } = "";
+    int Page { get; set; } = 1;
 
-    [Parameter] [SupplyParameterFromQuery] public int? Page { get; set; }
+    [Parameter] [SupplyParameterFromQuery] public string? SearchTerm { get; set; }
     [Parameter] [SupplyParameterFromQuery] public string? Genre { get; set; }
 
     void Search(EventArgs e)
@@ -49,7 +52,7 @@
             return;
         }
         
-        Console.WriteLine($"Term: {SearchTerm}");
+        NavigationManager.NavigateTo($"/sounds?SearchTerm={WebUtility.UrlEncode(SearchTerm)}");
     }
 
     Dictionary<string, List<SfxGenre>> GenresTree { get; set; } = new Dictionary<string, List<SfxGenre>>();

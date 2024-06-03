@@ -4,6 +4,7 @@ namespace IkSound.Models.Epidemic;
 
 public class Sizes
 {
+    // Should be a dictionary but I'm too lazy to implement it
     [JsonPropertyName("XS")]
     public string XS { get; set; }
 
