@@ -1,0 +1,22 @@
+﻿@using System.Net
+@inject NavigationManager NavigationManager
+
+<form @onsubmit="Search" class="mt-2">
+    <input type="text" class="form-control" id="search" placeholder="Search" @bind="Term"/>
+</form>
+
+@code {
+    string Term { get; set; } = string.Empty;
+    
+    [Parameter] public bool Sfx { get; set; } = false;
+    
+    void Search()
+    {
+        if(string.IsNullOrWhiteSpace(Term))
+        {
+            return;
+        }
+
+        NavigationManager.NavigateTo($"/search?Term={WebUtility.UrlEncode(Term)}&Sfx={Sfx}");
+    }
+}

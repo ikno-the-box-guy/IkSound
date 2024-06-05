@@ -5,5 +5,5 @@ namespace IkSound.Models.Epidemic;
 public class Max
 {
     [JsonPropertyName("value")]
-    public int Value { get; set; }
+    public int? Value { get; set; }
 }

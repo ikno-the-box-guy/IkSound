@@ -2,6 +2,12 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+html {
+    /* Prevents scrollbar from moving page contents to the side */
+    /* TODO: Replace with custom scrollbar that is partially transparent */
+    overflow-y: scroll;
+}
+
 h1:focus {
     outline: none;
 }
@@ -93,6 +99,10 @@ code {
     inherits: false;
 }
 
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+.fade-in {
+    animation:fadeIn .3s ease-in 0s 1 normal forwards;
+}
 .song-container {
     /*background: #181b1e;*/
     background-image: linear-gradient(90deg, #181b1e 20%, var(--gradient-end) 90%);

@@ -1,7 +1,16 @@
 ﻿@page "/Search"
+@using IkSound.Components
+
+@if(Genre != null)
+{
+    <SearchComponent SearchTerm="@Term" Genre="@Genre" Sfx="@Sfx" @key="Genre"/>
+} else if (Term != null)
+{
+    <SearchComponent SearchTerm="@Term" Sfx="@Sfx" @key="Term"/>
+}
 
 @code {
-    public string? SearchTerm { get; set; }
-    public string? Genre { get; set; }
-    public bool Sfx { get; set; } = false;
+    [Parameter] [SupplyParameterFromQuery] public string? Term { get; set; }
+    [Parameter] [SupplyParameterFromQuery] public string? Genre { get; set; }
+    [Parameter] [SupplyParameterFromQuery] public bool Sfx { get; set; } = false;
 }

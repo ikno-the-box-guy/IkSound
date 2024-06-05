@@ -1,17 +1,27 @@
-﻿@using IkSound.Models.Epidemic
+﻿@using System.Collections
+@using IkSound.Models.Epidemic
 @using IkSound.Models.Epidemic.Sfx
 @using IkSound.Utils
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 
-@if(Songs != null)
+@if(Songs != null && TotalHits == 0)
+{
+    <p>No songs found</p>
+}
+
+@if(Songs != null && Songs.Count > 0)
 {
     <div class="container">
-        <h1>Search: @SearchTerm</h1>
         <div class="col">
             @foreach (Song song in Songs)
             {
-                <SongCard Song="@song" @key="song.Id"/>
+                <span class="fade-in"><SongCard Song="@song" @key="song.Id"/></span>
+            }
+            @if (Songs.Count < TotalHits)
+            {
+                // TODO: Replace with a better looking button
+                <button class="btn btn-primary" @onclick="LoadMore">Load more</button>
             }
         </div>
     </div>
@@ -19,7 +29,10 @@
 
 
 @code {
-    ICollection<Song>? Songs { get; set; }
+    const int PageSize = 10;
+    
+    List<Song>? Songs { get; set; }
+    int TotalHits { get; set; }
     int Page { get; set; } = 1;
     
     [Parameter] public string? SearchTerm { get; set; }
@@ -33,12 +46,40 @@
             NavigationManager.NavigateTo("/sounds");
         }
 
+        Songs = (await LoadSongs())?.ToList();
+    }
+    
+    private async Task LoadMore()
+    {
+        if(Songs?.Count >= TotalHits)
+        {
+            return;
+        }
+        
+        Page++;
+        ICollection<Song>? songs = await LoadSongs();
+        
+        if(songs != null)
+            Songs?.AddRange(songs);
+    }
+    
+    private async Task<ICollection<Song>?> LoadSongs()
+    {
         string term = SearchTerm == null ? "" : $"&term={SearchTerm}";
         string genre = Genre == null ? "" : $"&genres={Genre}";
         
-        string url = $"json/search/{(Sfx ? "sfx" : "tracks")}/?limit=10&page={Page}{term}{genre}";
-        Root? root = await Http.GetFromJsonAsync<Root>(HttpUtils.GetUrl(url));
+        string url = $"json/search/{(Sfx ? "sfx" : "tracks")}/?limit={PageSize}&page={Page}{term}{genre}";
         
-        Songs = root?.Entities.Tracks.Values;
+        Root? root = await Http.GetFromJsonAsync<Root>(HttpUtils.GetUrl(url));
+
+        if(root == null)
+        {
+            Console.WriteLine("Failed to fetch songs");
+            return null;
+        }
+        
+        TotalHits = root?.Meta.TotalHits ?? 0;
+        
+        return TotalHits == 0 ? null : root?.Entities.Tracks.Values;
     }
 }

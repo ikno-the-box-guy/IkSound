@@ -6,38 +6,24 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
-@if(Genre != null)
-{
-    <SearchComponent SearchTerm="@SearchTerm" Genre="@Genre" Sfx="@false" @key="Genre"/>
-} else if (SearchTerm != null)
-{
-    <SearchComponent SearchTerm="@SearchTerm" Sfx="@false" @key="SearchTerm"/>
-}
-
 <div class="container">
     <h3>Sound Effects</h3>
     
-    <form @onsubmit="Search" class="mt-2">
-        <input type="text" class="form-control" id="search" placeholder="Search" @bind="SearchTerm"/>
-    </form>
+    <SearchBar Sfx="true"/>
 </div>
 
-<div class="container mt-4">
-    <h3>Tags</h3>
-    
-    <div class="row mt-2">
-        @if (GenresTree.Count == 0)
-        {
-            <p>Loading...</p>
-        }
-        else
-        {
+@if (SfxRootId != null)
+{
+    <div class="container mt-4 fade-in">
+        <h3>Tags</h3>
+
+        <div class="row mt-2">
             <GenreColumn Genres="@GenresTree[SfxRootId].Take(GenresTree[SfxRootId].Count / 3)" GenresTree="@GenresTree"/>
             <GenreColumn Genres="@GenresTree[SfxRootId].GetRange(GenresTree[SfxRootId].Count / 3, GenresTree[SfxRootId].Count / 3)" GenresTree="@GenresTree"/>
             <GenreColumn Genres="@GenresTree[SfxRootId].Skip(GenresTree[SfxRootId].Count / 3 * 2)" GenresTree="@GenresTree"/>
-        }
+        </div>
     </div>
-</div>
+}
 
 @code {
     int Page { get; set; } = 1;
@@ -45,18 +31,8 @@
     [Parameter] [SupplyParameterFromQuery] public string? SearchTerm { get; set; }
     [Parameter] [SupplyParameterFromQuery] public string? Genre { get; set; }
 
-    void Search(EventArgs e)
-    {
-        if(string.IsNullOrWhiteSpace(SearchTerm))
-        {
-            return;
-        }
-        
-        NavigationManager.NavigateTo($"/sounds?SearchTerm={WebUtility.UrlEncode(SearchTerm)}");
-    }
-
     Dictionary<string, List<SfxGenre>> GenresTree { get; set; } = new Dictionary<string, List<SfxGenre>>();
-    string SfxRootId { get; set; } = "";
+    string? SfxRootId { get; set; } = null;
         
     protected override async Task OnInitializedAsync()
     {
