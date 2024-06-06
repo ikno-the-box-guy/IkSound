@@ -2,18 +2,33 @@
 
 @* <Waveform WaveformUrl="@Song.Stems["full"].WaveformUrl"></Waveform> *@
 
-<div class="song-container w-100 d-flex flex-row m-2">
-    <img class="h-100" src="@(Song.CoverArt.BaseUrl + Song.CoverArt.Sizes.XS)" alt="@Song.Title"/>
-    
-    <div class="col p-2">
-        <h2 class="text-truncate mw-100">@Song.Title</h2>
-        <audio controls src="@Song.Stems["full"].LqMp3Url"></audio>
+<div class="song-container song-height w-100 d-grid m-2 fade-in gap-2">
+    <div class="d-flex gap-2 align-items-center song-height">
+        <img class="song-height" src="@(Song.CoverArt.BaseUrl + Song.CoverArt.Sizes.XS)" alt="@Song.Title"/>
+        <h5 class="text-truncate align-content-center ms-2">@Song.Title</h5>
     </div>
     
-    <div class="p-2 text-body-tertiary">
+    <div class="align-items-center">
+        @* <audio class="w-100" controls src="@Song.Stems["full"].LqMp3Url"></audio> *@
+        <Waveform WaveformUrl="@Song.Stems["full"].WaveformUrl"></Waveform>
+    </div>
+
+    <div>
+        <label>0:01</label>
+    </div>
+    
+    <div class="p-2 text-body-tertiary text-end">
         <span>A, </span>
         <span>B, </span>
         <span>C</span>
+    </div>
+    
+    <div>
+        <label>meta</label>
+    </div>
+    
+    <div>
+        <label>buttons</label>
     </div>
 </div>
 

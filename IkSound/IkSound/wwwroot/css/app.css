@@ -106,11 +106,22 @@ code {
 .song-container {
     /*background: #181b1e;*/
     background-image: linear-gradient(90deg, #181b1e 20%, var(--gradient-end) 90%);
-    
-    
     transition: --gradient-end .1s ease-in-out;
+    
+    grid-template-columns: 2fr 4fr 4rem 1fr 11.5rem;
+    gap: 1rem;
 }
 
 .song-container:hover {
     --gradient-end: #181b1e;
+}
+
+.song-height {
+    height: 56px !important;
+}
+
+.waveform {
+    position: relative;
+    width: 100%;
+    color: #16191b;
 }

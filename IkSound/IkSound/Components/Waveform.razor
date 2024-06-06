@@ -1,111 +1,18 @@
-﻿@*<script type="module">
-    fetch('https://audiocdn.epidemicsound.com/waveforms/1600/374954.json')
-        .then(response => response.json())
-        .then(json => {
-            json.version = 2
-            json.channels = 2
-            console.log(json)
-        });
-</script>*@
-
-@inject IJSRuntime JSRuntime
+﻿@inject IJSRuntime JSRuntime
 @inject HttpClient Http
 
-<canvas id="waveform-@WaveformUrl" width="800" height="100"></canvas>
-
-<span>@WaveformUrl</span>
-
-<script type="module" src="https://cdn.jsdelivr.net/npm/waveform-data@4.5.0/dist/waveform-data.esm.min.js"></script>
-<script type="module">
-    import WaveformData from "https://cdn.jsdelivr.net/npm/waveform-data@4.5.0/dist/waveform-data.esm.min.js";
-    
-    // Translate into C#
-    export function drawWaveform(waveformJson, canvas) {
-        var waveform = new WaveformData(waveformJson);
-        
-        const scaleY = (amplitude, height) => {
-            const range = 256;
-            const offset = 128;
-    
-            return height - ((amplitude + offset) * height) / range;
-        }
-    
-        const ctx = canvas.getContext('2d');
-        ctx.beginPath();
-    
-        const channel = waveform.channel(0);
-    
-        // Loop forwards, drawing the upper half of the waveform
-        for (let x = 0; x < waveform.length; x++) {
-            const val = channel.max_sample(x);
-    
-            ctx.lineTo(x + 0.5, scaleY(val, canvas.height) + 0.5);
-        }
-    
-        // Loop backwards, drawing the lower half of the waveform
-        for (let x = waveform.length - 1; x >= 0; x--) {
-            const val = channel.min_sample(x);
-    
-            ctx.lineTo(x + 0.5, scaleY(val, canvas.height) + 0.5);
-        }
-    
-        ctx.closePath();
-        ctx.stroke();
-        ctx.fill();
-    }
-    @*let url = "@WaveformUrl";
-    console.log(url);
-    
-    const waveformJson = await fetch('https://audiocdn.epidemicsound.com/waveforms/1600/374954.json')
-        .then(response => response.json())
-        .then(json => {
-            json.version = 1
-            return json;
-        });
-    
-    var waveform = new WaveformData(waveformJson);
-    
-    var canvas = document.getElementById('waveform');
-
-    const scaleY = (amplitude, height) => {
-        const range = 256;
-        const offset = 128;
-
-        return height - ((amplitude + offset) * height) / range;
-    }
-
-    const ctx = canvas.getContext('2d');
-    ctx.beginPath();
-
-    const channel = waveform.channel(0);
-
-    // Loop forwards, drawing the upper half of the waveform
-    for (let x = 0; x < waveform.length; x++) {
-        const val = channel.max_sample(x);
-
-        ctx.lineTo(x + 0.5, scaleY(val, canvas.height) + 0.5);
-    }
-
-    // Loop backwards, drawing the lower half of the waveform
-    for (let x = waveform.length - 1; x >= 0; x--) {
-        const val = channel.min_sample(x);
-
-        ctx.lineTo(x + 0.5, scaleY(val, canvas.height) + 0.5);
-    }
-
-    ctx.closePath();
-    ctx.stroke();
-    ctx.fill();*@
-</script>
+<canvas id="waveform-@_waveformId" width="1600" height="194" class="song-height waveform"></canvas>
 
 @code {
     [Parameter] public string? WaveformUrl { get; set; }
+    
+    Guid? _waveformId = Guid.NewGuid();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("import", "https://cdn.jsdelivr.net/npm/waveform-data@4.5.0/dist/waveform-data.esm.min.js");
+            await DrawWaveform();
         }
     }
     
@@ -113,10 +20,10 @@
     private async Task DrawWaveform()
     {
         // Get the canvas element
-        var canvas = await JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", "waveform-@WaveformUrl");
+        var canvas = await JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", $"waveform-{_waveformId}");
         
         // Fetch the waveform JSON
-        var waveformJson = await Http.GetFromJsonAsync<object>($"https://audiocdn.epidemicsound.com/waveforms/1600/{WaveformUrl}.json");
+        var waveformJson = await Http.GetFromJsonAsync<object>(WaveformUrl);
         
         // Draw the waveform
         await JSRuntime.InvokeVoidAsync("drawWaveform", waveformJson, canvas);

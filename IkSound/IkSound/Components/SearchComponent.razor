@@ -16,12 +16,12 @@
         <div class="col">
             @foreach (Song song in Songs)
             {
-                <span class="fade-in"><SongCard Song="@song" @key="song.Id"/></span>
+                <SongCard Song="@song" @key="song.Id"/>
             }
-            @if (Songs.Count < TotalHits)
+            @if (Songs.Count < TotalHits && TotalHits > 0)
             {
                 // TODO: Replace with a better looking button
-                <button class="btn btn-primary" @onclick="LoadMore">Load more</button>
+                <button class="btn btn-primary fade-in" @onclick="LoadMore">Load more</button>
             }
         </div>
     </div>
