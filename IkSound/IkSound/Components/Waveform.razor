@@ -16,17 +16,23 @@
         }
     }
     
-    // Draw waveform
+    IJSObjectReference? _canvas;
     private async Task DrawWaveform()
     {
         // Get the canvas element
-        var canvas = await JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", $"waveform-{_waveformId}");
+        _canvas = await JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", $"waveform-{_waveformId}");
         
         // Fetch the waveform JSON
         var waveformJson = await Http.GetFromJsonAsync<object>(WaveformUrl);
         
         // Draw the waveform
-        await JSRuntime.InvokeVoidAsync("drawWaveform", waveformJson, canvas);
+        await JSRuntime.InvokeVoidAsync("drawWaveform", waveformJson, _canvas);
+     
+        // Add canvas fade-in class
+        await _canvas.InvokeVoidAsync("classList.add", "fade-in");
+        
+        // Dispose the canvas reference
+        await _canvas.DisposeAsync();
     }
 }
 

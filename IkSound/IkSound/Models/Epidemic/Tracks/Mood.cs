@@ -24,4 +24,9 @@ public class Mood
 
     [JsonPropertyName("displayKey")]
     public string DisplayKey { get; set; }
+    
+    public override string ToString()
+    {
+        return DisplayTag;
+    }
 }

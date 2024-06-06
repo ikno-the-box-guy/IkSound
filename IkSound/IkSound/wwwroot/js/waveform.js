@@ -36,4 +36,13 @@ window.drawWaveform = (waveformJson, canvas) => {
     
     ctx.stroke();
     ctx.fill();
+
+    ctx.beginPath();
+
+    ctx.moveTo(0, canvas.height / 2);
+    ctx.lineTo(canvas.width, canvas.height / 2);
+    ctx.closePath();
+    
+    ctx.stroke();
+    ctx.fill();
 }
