@@ -21,7 +21,7 @@
             @if (Songs.Count < TotalHits && TotalHits > 0)
             {
                 // TODO: Replace with a better looking button
-                <button class="btn btn-primary fade-in" @onclick="LoadMore">Load more</button>
+                <button class="btn fade-in wide-btn m-2" @onclick="LoadMore">Load more</button>
             }
         </div>
     </div>
@@ -34,6 +34,8 @@
     List<Song>? Songs { get; set; }
     int TotalHits { get; set; }
     int Page { get; set; } = 1;
+    
+    HashSet<int> Ids { get; set; } = new();
     
     [Parameter] public string? SearchTerm { get; set; }
     [Parameter] public string? Genre { get; set; }
@@ -57,13 +59,13 @@
         }
         
         Page++;
-        ICollection<Song>? songs = await LoadSongs();
+        IEnumerable<Song>? songs = await LoadSongs();
         
         if(songs != null)
             Songs?.AddRange(songs);
     }
     
-    private async Task<ICollection<Song>?> LoadSongs()
+    private async Task<IEnumerable<Song>?> LoadSongs()
     {
         string term = SearchTerm == null ? "" : $"&term={SearchTerm}";
         string genre = Genre == null ? "" : $"&genres={Genre}";
@@ -80,6 +82,6 @@
         
         TotalHits = root?.Meta.TotalHits ?? 0;
         
-        return TotalHits == 0 ? null : root?.Entities.Tracks.Values;
+        return TotalHits == 0 ? null : root?.Entities.Tracks.Values.Where(x => Ids.Add(x.Id));
     }
 }

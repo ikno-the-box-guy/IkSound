@@ -150,9 +150,42 @@ code {
 }
 
 .empty-btn:hover {
-    background: #282828;
+    background-color: #282828;
 }
 
-.empty-btn:active {
-    background: #3b3b3b;
+.empty-btn:active, .wide-btn:active {
+    background-color: #3b3b3b;
+}
+
+.wide-btn {
+    width: 100%;
+    border-radius: 0;
+    background-color: #181b1e;
+    transition: background-color 0.1s ease-in-out;
+}
+
+.wide-btn:hover {
+    background-color: #1d1e21;
+}
+
+.cover-size{
+    height: 56px !important;
+    width: 56px !important;
+}
+
+.audio-control{
+    text-align-last: center;
+    align-content: center;
+}
+
+.audio-control:hover{
+    background-color: #333333;
+}
+
+.audio-control:active{
+    background-color: #444444;
+}
+
+.audio-control > i {
+    font-size: 1.5rem;
 }

@@ -1,18 +1,70 @@
 ﻿@using System.Globalization
-@using System.Text
 @using IkSound.Models.Epidemic
+@inject IJSRuntime JSRuntime
 
 @* TODO: Start resizing and hiding elements based on screen size *@
 
-<div class="song-container song-height w-100 d-grid m-2 fade-in gap-2">
+<script>
+    window.togglePlay = function (id) {
+        let audio = document.getElementById("audio-" + id);
+        let play = document.getElementById("play-" + id);
+        let pause = document.getElementById("pause-" + id);
+        
+        if (audio.paused) {
+            // Stop all other audio from playing
+            document.querySelectorAll('audio').forEach(el => {el.pause(); el.currentTime = 0});
+        
+            audio.play();
+            play.hidden = true;
+            pause.hidden = false;
+        } else {
+            audio.pause();
+            play.hidden = false;
+            pause.hidden = true;
+        }
+    }
+    
+    window.revealButtons = function (id) {
+        let audio = document.getElementById("audio-" + id);
+        let play = document.getElementById("play-" + id);
+        let pause = document.getElementById("pause-" + id);
+        
+        if (audio.paused) {
+            play.hidden = false;
+            pause.hidden = true;
+        } else {
+            play.hidden = true;
+            pause.hidden = false;
+        }
+    }
+    
+    window.hideButtons = function (id) {
+        let play = document.getElementById("play-" + id);
+        let pause = document.getElementById("pause-" + id);
+        
+        play.hidden = true;
+        pause.hidden = true;
+    }
+</script>
+
+<div class="song-container song-height w-100 d-grid m-2 fade-in gap-2" onmouseover="revealButtons('@Id')" onmouseout="hideButtons('@Id')">
     <div class="d-flex gap-2 align-items-center song-height overflow-hidden">
-        <img class="song-height" src="@(Song.CoverArt.BaseUrl + Song.CoverArt.Sizes.XS)" alt="@Song.Title"/>
+        <span class="cover-size" onclick="togglePlay('@Id')">
+            <div class="cover-size audio-control" id="play-@Id" hidden>
+                <i class="bi bi-play"></i>
+            </div>
+            <div class="cover-size audio-control" id="pause-@Id" hidden>
+                <i class="bi bi-pause"></i>
+            </div>
+            <img class="cover-size" id="art-@Id" src="@(Song.CoverArt.BaseUrl + Song.CoverArt.Sizes.XS)" alt="@Song.Title"/>
+
+        </span>
         <a class="text-truncate fs-6 text-body text-decoration-none">@Song.Title</a>
     </div>
     
     <div class="align-content-center song-height">
-        @* <audio class="w-100" controls src="@Song.Stems["full"].LqMp3Url"></audio> *@
-        <Waveform WaveformUrl="@Song.Stems["full"].WaveformUrl"></Waveform>
+        <audio src="@Song.Stems.First().Value.LqMp3Url" id="audio-@Id"></audio>
+        <Waveform WaveformUrl="@Song.Stems.First().Value.WaveformUrl"></Waveform>
     </div>
 
     <div class="text-body-tertiary align-content-center">
@@ -26,12 +78,13 @@
     
     <div class="text-body-tertiary align-content-center d-flex flex-row gap-3">
         <button class="h-100 empty-btn" onclick="navigator.clipboard.writeText('https://www.epidemicsound.com/track/@Song.PublicSlug');"><i class="bi bi-link-45deg fs-4"></i></button>
-        <a class="h-100 empty-btn" href="@("https://corsproxy.io/?" + Song.Stems["full"].LqMp3Url)" download="@(Song.Title)" onclick="event.preventDefault(); window.download(this.href, this.download);"><i class="bi bi-download fs-5"></i></a>
+        <a class="h-100 empty-btn" href="@("https://corsproxy.io/?" + Song.Stems.First().Value.LqMp3Url)" download="@(Song.Title)" onclick="event.preventDefault(); window.download(this.href, this.download);"><i class="bi bi-download fs-5"></i></a>
     </div>
 </div>
 
 @code {
     [Parameter] public Song Song { get; set; } = null!;
+    Guid Id { get; set; } = Guid.NewGuid();
     
     string GetGenres()
     {

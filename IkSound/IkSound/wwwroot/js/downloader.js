@@ -8,5 +8,6 @@
             a.download = filename;
             a.click();
             window.URL.revokeObjectURL(url);
+            a.remove();
         });
 }
