@@ -35,11 +35,10 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore ./IkSound/IkSound/IkSound.csproj
 
       - name: Build the Blazor WebAssembly project
-        run: dotnet publish -c Release -o build
-        working-directory: ./IkSound/
+        run: dotnet publish ./IkSound/IkSound/IkSound.csproj -c Release -o build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -47,7 +46,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./build/wwwroot
+          path: ./IkSound/IkSound/build/wwwroot
           
   # Deployment job
   deploy:
