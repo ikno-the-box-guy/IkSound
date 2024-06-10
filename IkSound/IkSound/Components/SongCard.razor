@@ -18,9 +18,9 @@
         <a class="text-truncate fs-6 text-body text-decoration-none">@Song.Title</a>
     </div>
     
-    <div class="align-content-center song-height position-relative d-flex">
+    <div class="align-content-center song-height position-relative d-flex" onclick="manageWaveformClick(event, this, '@Id')">
         <span class="h-100 position-absolute z-1 playhead" id="playhead-@Id" style="display: none;"></span>
-        <audio src="@Song.Stems.First().Value.LqMp3Url" id="audio-@Id" ></audio>
+        <audio src="@Song.Stems.First().Value.LqMp3Url" id="audio-@Id"></audio>
         <Waveform Id="Id" WaveformUrl="@Song.Stems.First().Value.WaveformUrl"></Waveform>
     </div>
 

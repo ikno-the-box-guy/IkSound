@@ -198,6 +198,4 @@ code {
     height: 100%;
     background-color: white;
     z-index: 1;
-    
-    transition: left 0.02s linear;
 }
