@@ -19,8 +19,4 @@
       <_ContentIncludedByDefault Remove="wwwroot\js\waveform\waveform-utils.js" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="wwwroot\img\" />
-    </ItemGroup>
-
 </Project>

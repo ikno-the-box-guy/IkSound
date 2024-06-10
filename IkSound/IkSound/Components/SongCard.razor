@@ -6,7 +6,7 @@
 
 <div class="song-container song-height w-100 d-grid m-2 fade-in gap-2" onmouseover="revealButtons('@Id')" onmouseout="hideButtons('@Id')">
     <div class="d-flex gap-2 align-items-center song-height overflow-hidden">
-        <span class="cover-size" onclick="togglePlay('@Id')">
+        <span class="cover-size pointer" onclick="togglePlay('@Id')">
             <div class="cover-size audio-control" id="play-@Id" hidden>
                 <i class="bi bi-play"></i>
             </div>
@@ -18,7 +18,7 @@
         <a class="text-truncate fs-6 text-body text-decoration-none">@Song.Title</a>
     </div>
     
-    <div class="align-content-center song-height position-relative d-flex" onclick="manageWaveformClick(event, this, '@Id')">
+    <div class="align-content-center song-height position-relative d-flex pointer" onclick="manageWaveformClick(event, this, '@Id')">
         <span class="h-100 position-absolute z-1 playhead" id="playhead-@Id" style="display: none;"></span>
         <audio src="@Song.Stems.First().Value.LqMp3Url" id="audio-@Id"></audio>
         <Waveform Id="Id" WaveformUrl="@Song.Stems.First().Value.WaveformUrl"></Waveform>

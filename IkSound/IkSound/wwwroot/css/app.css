@@ -199,3 +199,7 @@ code {
     background-color: white;
     z-index: 1;
 }
+
+.pointer:hover {
+    cursor: pointer;
+}
