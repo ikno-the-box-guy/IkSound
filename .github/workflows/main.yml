@@ -21,6 +21,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Setup dotnet
+  setup-dotnet:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x' # Specify the version of .NET to install
+
+      - name: Verify installation
+        run: dotnet --version
+        
   # Build job
   build:
     runs-on: ubuntu-latest
