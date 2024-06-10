@@ -20,23 +20,7 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-jobs:
-  # Setup dotnet
-  setup-dotnet:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0.x' # Specify the version of .NET to install
-
-      - name: Verify installation
-        run: dotnet --version
-        
+jobs:   
   # Build job
   build:
     runs-on: ubuntu-latest
@@ -51,7 +35,7 @@ jobs:
         uses: na1307/blazor-github-pages@v2
         id: prepare
         with:
-          project-path: IkSound/IkSound.csproj
+          project-path: IkSound/IkSound/IkSound.csproj
           main-repo: true
       - name: Setup Pages
         uses: actions/configure-pages@v5
