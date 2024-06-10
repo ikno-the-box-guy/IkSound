@@ -4,49 +4,6 @@
 
 @* TODO: Start resizing and hiding elements based on screen size *@
 
-<script>
-    window.togglePlay = function (id) {
-        let audio = document.getElementById("audio-" + id);
-        let play = document.getElementById("play-" + id);
-        let pause = document.getElementById("pause-" + id);
-        
-        if (audio.paused) {
-            // Stop all other audio from playing
-            document.querySelectorAll('audio').forEach(el => {el.pause(); el.currentTime = 0});
-        
-            audio.play();
-            play.hidden = true;
-            pause.hidden = false;
-        } else {
-            audio.pause();
-            play.hidden = false;
-            pause.hidden = true;
-        }
-    }
-    
-    window.revealButtons = function (id) {
-        let audio = document.getElementById("audio-" + id);
-        let play = document.getElementById("play-" + id);
-        let pause = document.getElementById("pause-" + id);
-        
-        if (audio.paused) {
-            play.hidden = false;
-            pause.hidden = true;
-        } else {
-            play.hidden = true;
-            pause.hidden = false;
-        }
-    }
-    
-    window.hideButtons = function (id) {
-        let play = document.getElementById("play-" + id);
-        let pause = document.getElementById("pause-" + id);
-        
-        play.hidden = true;
-        pause.hidden = true;
-    }
-</script>
-
 <div class="song-container song-height w-100 d-grid m-2 fade-in gap-2" onmouseover="revealButtons('@Id')" onmouseout="hideButtons('@Id')">
     <div class="d-flex gap-2 align-items-center song-height overflow-hidden">
         <span class="cover-size" onclick="togglePlay('@Id')">
@@ -57,14 +14,14 @@
                 <i class="bi bi-pause"></i>
             </div>
             <img class="cover-size" id="art-@Id" src="@(Song.CoverArt.BaseUrl + Song.CoverArt.Sizes.XS)" alt="@Song.Title"/>
-
         </span>
         <a class="text-truncate fs-6 text-body text-decoration-none">@Song.Title</a>
     </div>
     
-    <div class="align-content-center song-height">
-        <audio src="@Song.Stems.First().Value.LqMp3Url" id="audio-@Id"></audio>
-        <Waveform WaveformUrl="@Song.Stems.First().Value.WaveformUrl"></Waveform>
+    <div class="align-content-center song-height position-relative d-flex">
+        <span class="h-100 position-absolute z-1 playhead" id="playhead-@Id" style="display: none;"></span>
+        <audio src="@Song.Stems.First().Value.LqMp3Url" id="audio-@Id" ></audio>
+        <Waveform Id="Id" WaveformUrl="@Song.Stems.First().Value.WaveformUrl"></Waveform>
     </div>
 
     <div class="text-body-tertiary align-content-center">

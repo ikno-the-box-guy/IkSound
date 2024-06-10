@@ -106,7 +106,7 @@ code {
 .song-container {
     /*background: #181b1e;*/
     background-image: linear-gradient(90deg, #181b1e 20%, var(--gradient-end) 90%);
-    transition: --gradient-end .1s ease-in-out;
+    /*transition: --gradient-end .1s ease-in-out;*/
     
     grid-template-columns: 2fr 4fr 4rem 1fr 11.5rem;
     gap: 1rem;
@@ -146,7 +146,7 @@ code {
     text-align-last: center;
     aspect-ratio: 1;
     
-    transition: background-color 0.1s ease-in-out;
+    /*transition: background-color 0.1s ease-in-out;*/
 }
 
 .empty-btn:hover {
@@ -188,4 +188,16 @@ code {
 
 .audio-control > i {
     font-size: 1.5rem;
+}
+
+.playhead {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background-color: white;
+    z-index: 1;
+    
+    transition: left 0.02s linear;
 }
