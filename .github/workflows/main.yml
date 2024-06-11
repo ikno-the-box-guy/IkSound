@@ -22,6 +22,9 @@ jobs:
     # publishes Blazor project to the release-folder
     - name: Publish .NET Core Project
       run: dotnet publish IkSound/IkSound/IkSound.csproj -c Release -o release --nologo
+
+    - name: List Files
+      run: ls
     
     # changes the base-tag in index.html from '/' to 'IkSound' to match GitHub Pages repository subdirectory
     - name: Change base-tag in index.html from / to IkSound
