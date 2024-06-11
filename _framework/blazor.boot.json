@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "IkSound",
   "resources": {
-    "hash": "sha256-Hj1WW25Ge27G3x5jFnBKMTgMM66V1Wb0mWkRdCVflAU=",
+    "hash": "sha256-kcsSg1qOcAYY/Pm9WBDM3XNMnJFDjsy/2v87HW/JOno=",
     "jsModuleNative": {
       "dotnet.native.8.0.6.suuomc2hr0.js": "sha256-YU6M9+jtDVnB8/wtrgIndOstzNh778Ls8g9XnbjorSk="
     },
@@ -17,7 +17,7 @@
       "icudt_no_CJK.dat": "sha256-L7sV7NEYP37/Qr2FPCePo5cJqRgTXRwGHuwF5Q+0Nfs="
     },
     "assembly": {
-      "IkSound.wasm": "sha256-jnFdIiDkULTvVc5GGxK4mCkgEk3hLbx3hrWXtqcRFg0=",
+      "IkSound.wasm": "sha256-qOgMBLmh3QM6I8dW9BexPbu+Nes/76uxcdc39jJkG7o=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-jzGzH2inesmJMC+6glCUlIwqdjScUG/Rpy/PqrUHp4s=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-4tmx4uC98MyKjCuM9ErBZwXpqkLx4fwVZfJQIv+Y0+A=",
       "Microsoft.AspNetCore.Components.WebAssembly.wasm": "sha256-M3UdZugn6VXjstpGoSdyG7fbZDKJdAs/IllJsILRYSg=",
