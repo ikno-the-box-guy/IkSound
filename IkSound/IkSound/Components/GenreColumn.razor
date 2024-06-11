@@ -30,6 +30,6 @@
     
     void Search(string genre)
     {
-        NavigationManager.NavigateTo($"/search?Genre={WebUtility.UrlEncode(genre)}&Sfx=true");
+        NavigationManager.NavigateTo($"search?Genre={WebUtility.UrlEncode(genre)}&Sfx=true");
     }
 }
