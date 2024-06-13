@@ -1,29 +1,41 @@
-﻿@using System.Collections
-@using IkSound.Models.Epidemic
-@using IkSound.Models.Epidemic.Sfx
+﻿@using IkSound.Models.Epidemic
 @using IkSound.Utils
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
+@inject IJSRuntime JSRuntime
 
-<script src="js/playheader.js"></script>
-
-@if(Songs != null && TotalHits == 0)
+@if(Songs != null && Songs.Count == 0 && TotalHits == 0)
 {
-    <p>No songs found</p>
+    <p>No @(Sfx ? "sound effects" : "songs") found</p>
 }
+
+<script>
+    window.getDistanceToBottom = function() {
+        let scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
+        let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+        let clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        
+        return scrollHeight - (scrollPosition + clientHeight);
+    }
+</script>
 
 @if(Songs != null && Songs.Count > 0)
 {
     <div class="container">
-        <div class="col">
+        <div class="col" @onwheel="OnWheel">
             @foreach (Song song in Songs)
             {
                 <SongCard Song="@song" @key="song.Id"/>
             }
+            @{ IsLoading = false; }
+        
             @if (Songs.Count < TotalHits && TotalHits > 0)
             {
-                // TODO: Replace with a better looking button
                 <button class="btn fade-in wide-btn m-2" @onclick="LoadMore">Load more</button>
+            }
+            else
+            {
+                <hr/>
             }
         </div>
     </div>
@@ -36,13 +48,26 @@
     List<Song>? Songs { get; set; }
     int TotalHits { get; set; }
     int Page { get; set; } = 1;
-    
+     
     HashSet<int> Ids { get; set; } = new();
     
     [Parameter] public string? SearchTerm { get; set; }
     [Parameter] public string? Genre { get; set; }
     [Parameter] public bool Sfx { get; set; } = true;
+    
+    private bool IsLoading { get; set; }
 
+    async Task OnWheel(WheelEventArgs e)
+    {
+        if (e.DeltaY <= 0 || IsLoading)
+            return;
+        
+        float distanceToBottom = await JSRuntime.InvokeAsync<float>("getDistanceToBottom");
+        
+        if (distanceToBottom < 100 && !IsLoading)
+            await LoadMore();
+    }
+    
     protected override async Task OnInitializedAsync()
     {
         if(SearchTerm == null && Genre == null)
@@ -50,7 +75,7 @@
             NavigationManager.NavigateTo("/sounds");
         }
 
-        Songs = (await LoadSongs())?.ToList();
+        Songs = (await LoadSongs())?.ToList() ?? new List<Song>();
     }
     
     private async Task LoadMore()
@@ -60,7 +85,10 @@
             return;
         }
         
+        IsLoading = true;
+        
         Page++;
+        
         IEnumerable<Song>? songs = await LoadSongs();
         
         if(songs != null)
@@ -72,7 +100,7 @@
         string term = SearchTerm == null ? "" : $"&term={SearchTerm}";
         string genre = Genre == null ? "" : $"&genres={Genre}";
         
-        string url = $"json/search/{(Sfx ? "sfx" : "tracks")}/?limit={PageSize}&page={Page}{term}{genre}";
+        string url = $"json/search/{(Sfx ? "sfx" : "tracks")}/?limit={PageSize}&page={Page}{term}{genre}&order=desc&sort=relevance";
         
         Root? root = await Http.GetFromJsonAsync<Root>(HttpUtils.GetUrl(url));
 

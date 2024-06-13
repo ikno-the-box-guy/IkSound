@@ -12,11 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\js\waveform\waveform-data-channel.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\js\waveform\waveform-data-worker.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\js\waveform\waveform-data.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\js\waveform\waveform-generator.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\js\waveform\waveform-utils.js" />
+      <Folder Include="wwwroot\media\" />
     </ItemGroup>
 
 </Project>
