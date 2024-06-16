@@ -22,7 +22,7 @@
 @if(Songs != null && Songs.Count > 0)
 {
     <div class="container">
-        <div class="col" @onwheel="OnWheel">
+        <div class="col" @onwheel="OnWheel" style="overflow-x: hidden">
             @foreach (Song song in Songs)
             {
                 <SongCard Song="@song" @key="song.Id"/>
@@ -40,7 +40,6 @@
         </div>
     </div>
 }
-
 
 @code {
     const int PageSize = 20;

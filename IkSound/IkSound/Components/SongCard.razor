@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
 @using IkSound.Models.Epidemic
+@using IkSound.Utils
 @inject IJSRuntime JSRuntime
 
 @* TODO: Start resizing and hiding elements based on screen size *@
@@ -15,12 +16,18 @@
             </div>
             <img class="cover-size" id="art-@Id" src="@(Song.CoverArt.BaseUrl + Song.CoverArt.Sizes.XS)" alt="@Song.Title"/>
         </span>
-        <a class="text-truncate fs-6 text-body text-decoration-none">@Song.Title</a>
+        <div class="d-flex flex-column">
+            <a class="text-truncate fs-6 text-body text-decoration-none" href="@Url">@Song.Title</a>
+            @if (!Song.IsSfx)
+            {
+                <a class="text-truncate fs-7 text-body-tertiary text-decoration-none" href="@("https://www.epidemicsound.com/artists/" + Song.Creatives["mainArtists"][0].Slug)">@Song.Creatives["mainArtists"][0]</a>
+            }
+        </div>
     </div>
     
     <div class="align-content-center song-height position-relative d-flex pointer" onclick="manageWaveformClick(event, this, '@Id')">
         <span class="h-100 position-absolute z-1 playhead" id="playhead-@Id" style="display: none;"></span>
-        <audio src="@Song.Stems.First().Value.LqMp3Url" id="audio-@Id"></audio>
+        <audio src="@Song.Stems[SelectedStem].LqMp3Url" id="audio-@Id"></audio>
         <Waveform Id="Id" WaveformUrl="@Song.Stems.First().Value.WaveformUrl"></Waveform>
     </div>
 
@@ -33,16 +40,49 @@
         <span class="text-truncate w-100 fs-7 d-block">@GetTags()</span>
     </div>
     
-    <div class="text-body-tertiary align-content-center d-flex flex-row gap-3">
-        <button class="h-100 empty-btn" onclick="navigator.clipboard.writeText('https://www.epidemicsound.com/track/@Song.PublicSlug');"><i class="bi bi-link-45deg fs-4"></i></button>
-        <a class="h-100 empty-btn" href="@("https://corsproxy.io/?" + Song.Stems.First().Value.LqMp3Url)" download="@(Song.Title)" onclick="event.preventDefault(); window.download(this.href, this.download);"><i class="bi bi-download fs-5"></i></a>
+    <div class="text-body-tertiary align-content-center d-flex flex-row">
+        <button class="h-100 empty-btn" onclick="navigator.clipboard.writeText('@Url');"><i class="bi bi-link-45deg fs-4"></i></button>
+        <a class="h-100 empty-btn" href="@("https://corsproxy.io/?" + Song.Stems[SelectedStem].LqMp3Url)" download="@($"{Song.Title} ({SelectedStem})")" onclick="event.preventDefault(); window.download(this.href, this.download);"><i class="bi bi-download fs-5"></i></a>
+        <button class="h-100 empty-btn" type="button" data-bs-toggle="modal" data-bs-target="#modal-@Id"><i class="bi bi-three-dots-vertical"></i></button>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-@Id" tabindex="-1" aria-labelledby="modal-label-@Id" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-label-@Id">Change stem type</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <select class="form-control" @onchange="OnStemChange">
+                    @foreach(var stem in Song.Stems)
+                    {
+                        <option value="@stem.Key">@stem.Key.CapitalizeFirst()</option>
+                    }
+                </select>
+            </div>
+        </div>
     </div>
 </div>
 
 @code {
     [Parameter] public Song Song { get; set; } = null!;
     Guid Id { get; set; } = Guid.NewGuid();
+    string SelectedStem { get; set; } = "full";
+
+    string Url => $"https://www.epidemicsound.com/track/{Song.PublicSlug}";
+
+    protected override void OnInitialized()
+    {
+        SelectedStem = Song.Stems.First().Key;
+    }
     
+    void OnStemChange(ChangeEventArgs e)
+    {
+        SelectedStem = e.Value?.ToString() ?? SelectedStem;
+    }
+
     string GetGenres()
     {
         return string.Join(", ", Song.Genres);
@@ -51,7 +91,7 @@
     string GetTags()
     {
         return Song.IsSfx ? 
-            string.Join(", ", Song.MetadataTags.Take(2).Select(str => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(str))) : 
+            string.Join(", ", Song.MetadataTags.Take(2).Select(str => str.ToTitleCase())) : 
             string.Join(", ", Song.Moods);
     }
 }

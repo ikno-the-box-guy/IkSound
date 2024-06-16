@@ -12,4 +12,9 @@ public class Creative
 
     [JsonPropertyName("slug")]
     public string Slug { get; set; }
+
+    public override string ToString()
+    {
+        return Name;
+    }
 }
