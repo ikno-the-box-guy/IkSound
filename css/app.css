@@ -1,12 +1,15 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    
+    /* Fix modal */
     padding: 0 !important;
+    overflow: visible !important;
 }
 
 html {
     /* Prevents scrollbar from moving page contents to the side */
     /* TODO: Replace with custom scrollbar that is partially transparent */
-    overflow-y: scroll;
+    overflow-y: scroll !important;
 }
 
 h1:focus {
@@ -216,4 +219,9 @@ code {
 
 .visible-trigger {
     display: block;
+}
+
+.clickable-link:hover {
+    cursor: pointer !important;
+    text-decoration: underline !important;
 }
