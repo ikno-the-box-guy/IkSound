@@ -16,11 +16,12 @@
             </div>
             <img class="cover-size" id="art-@Id" src="@(Song.CoverArt.BaseUrl + Song.CoverArt.Sizes.XS)" alt="@Song.Title"/>
         </span>
-        <div class="d-flex flex-column">
-            <a class="text-truncate fs-6 text-body text-decoration-none" href="@Url">@Song.Title</a>
+        <div class="d-flex flex-column overflow-hidden">
+            @* TODO: Fix individual width problem *@
+            <a class="clickable-link text-truncate fs-6 text-body text-decoration-none" href="@Url">@Song.Title</a>
             @if (!Song.IsSfx)
             {
-                <a class="text-truncate fs-7 text-body-tertiary text-decoration-none" href="@("https://www.epidemicsound.com/artists/" + Song.Creatives["mainArtists"][0].Slug)">@Song.Creatives["mainArtists"][0]</a>
+                <a class="clickable-link text-truncate fs-7 text-body-tertiary text-decoration-none" href="@("https://www.epidemicsound.com/artists/" + Song.Creatives["mainArtists"][0].Slug)">@Song.Creatives["mainArtists"][0]</a>
             }
         </div>
     </div>

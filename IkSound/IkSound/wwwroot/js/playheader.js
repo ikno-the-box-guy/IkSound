@@ -82,12 +82,13 @@ const playAudio = function (id, audio, play, pause) {
     interval = setInterval((id) => {
         let playhead = document.getElementById("playhead-" + id);
 
-        if (audio === null || audio.ended) {
-            if(play !== null && pause !== null) {
+        if (audio === null || audio.ended || playhead === null) {
+            if(play !== null && pause !== null && !pause.hidden) {
                 play.hidden = false;
                 pause.hidden = true;
             }
             clearInterval(interval);
+            return;
         }
 
         let percentage = (audio.currentTime / audio.duration) * 100;

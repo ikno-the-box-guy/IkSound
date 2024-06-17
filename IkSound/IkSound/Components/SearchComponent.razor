@@ -1,4 +1,6 @@
-﻿@using IkSound.Models.Epidemic
+﻿@using System.Net
+@using System.Text.Encodings.Web
+@using IkSound.Models.Epidemic
 @using IkSound.Utils
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
@@ -96,7 +98,7 @@
     
     private async Task<IEnumerable<Song>?> LoadSongs()
     {
-        string term = SearchTerm == null ? "" : $"&term={SearchTerm}";
+        string term = SearchTerm == null ? "" : $"&term={WebUtility.UrlEncode(SearchTerm)}";
         string genre = Genre == null ? "" : $"&genres={Genre}";
         
         string url = $"json/search/{(Sfx ? "sfx" : "tracks")}/?limit={PageSize}&page={Page}{term}{genre}&order=desc&sort=relevance";

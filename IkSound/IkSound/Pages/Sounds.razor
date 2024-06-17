@@ -17,20 +17,15 @@
     <div class="container mt-4 fade-in">
         <h3>Tags</h3>
 
-        <div class="row mt-2">
-            <GenreColumn Genres="@GenresTree[SfxRootId].Take(GenresTree[SfxRootId].Count / 3)" GenresTree="@GenresTree"/>
-            <GenreColumn Genres="@GenresTree[SfxRootId].GetRange(GenresTree[SfxRootId].Count / 3, GenresTree[SfxRootId].Count / 3)" GenresTree="@GenresTree"/>
-            <GenreColumn Genres="@GenresTree[SfxRootId].Skip(GenresTree[SfxRootId].Count / 3 * 2)" GenresTree="@GenresTree"/>
+        <div class="row mt-2 p-1">
+            <GenreColumn Genres="@GenresTree[SfxRootId].Take(GenresTree[SfxRootId].Count / 3)" GenresTree="@GenresTree" Sfx="true"/>
+            <GenreColumn Genres="@GenresTree[SfxRootId].GetRange(GenresTree[SfxRootId].Count / 3, GenresTree[SfxRootId].Count / 3)" GenresTree="@GenresTree" Sfx="true"/>
+            <GenreColumn Genres="@GenresTree[SfxRootId].Skip(GenresTree[SfxRootId].Count / 3 * 2)" GenresTree="@GenresTree" Sfx="true"/>
         </div>
     </div>
 }
 
 @code {
-    int Page { get; set; } = 1;
-
-    [Parameter] [SupplyParameterFromQuery] public string? SearchTerm { get; set; }
-    [Parameter] [SupplyParameterFromQuery] public string? Genre { get; set; }
-
     Dictionary<string, List<SfxGenre>> GenresTree { get; set; } = new Dictionary<string, List<SfxGenre>>();
     string? SfxRootId { get; set; } = null;
         
@@ -56,6 +51,9 @@
         
         foreach(SfxGenre genre in genres)
         {
+            if (genre.FatherGenreId == null)
+                continue;
+            
             genreIds.Add(genre.Id);
             
             if (!genreDictionary.ContainsKey(genre.FatherGenreId))

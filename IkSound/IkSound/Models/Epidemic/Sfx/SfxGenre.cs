@@ -8,7 +8,7 @@ public class SfxGenre
     public string Id { get; set; }
 
     [JsonPropertyName("fatherGenreId")]
-    public string FatherGenreId { get; set; }
+    public string? FatherGenreId { get; set; }
 
     [JsonPropertyName("tag")]
     public string Tag { get; set; }

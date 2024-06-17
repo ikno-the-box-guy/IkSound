@@ -1,23 +1,24 @@
-﻿@using System.Net
-@using IkSound.Models.Epidemic.Sfx
-@inject NavigationManager NavigationManager
+﻿@using IkSound.Models.Epidemic.Sfx
 
 <div class="col">
     @foreach(var genre in Genres)
     {
-        <form method="get" @onsubmit="() => Search(genre.Slug)">
-            <input class="border-0 bg-transparent text-body-emphasis" type="submit" value="@genre.DisplayTag"/>
-        </form>
-        <ul class="list-unstyled">
-            @foreach (var subGenre in GenresTree[genre.Id])
-            {
-                <li>
-                    <form method="get" @onsubmit="() => Search(subGenre.Slug)">
-                        <input class="border-0 bg-transparent text-body-tertiary" type="submit" value="@subGenre.DisplayTag"/>
-                    </form>
-                </li>
-            }
-        </ul>
+        <a class="text-decoration-none text-body-emphasis clickable-link" href="search?genre=@genre.Slug&sfx=@Sfx" val>@genre.DisplayTag</a>
+        if (GenresTree.TryGetValue(genre.Id, out List<SfxGenre>? subGenres))
+        {
+            <ul class="list-unstyled">
+                @foreach (var subGenre in subGenres)
+                {
+                    <li>
+                        <a class="text-decoration-none text-body-tertiary clickable-link" href="search?genre=@subGenre.Slug&sfx=@Sfx" val>@subGenre.DisplayTag</a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <br/>
+        }
     }
 </div>
 
@@ -28,8 +29,6 @@
     [Parameter]
     public IEnumerable<SfxGenre> Genres { get; set; }
     
-    void Search(string genre)
-    {
-        NavigationManager.NavigateTo($"search?Genre={WebUtility.UrlEncode(genre)}&Sfx=true");
-    }
+    [Parameter]
+    public bool Sfx { get; set; }
 }

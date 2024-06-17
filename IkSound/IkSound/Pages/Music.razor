@@ -1,9 +1,91 @@
 ﻿@page "/music"
+@using System.Net
 @using IkSound.Components
-<h3>Music</h3>
+@using IkSound.Utils
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
 
-<SearchBar Sfx="false"/>
+@using IkSound.Models.Epidemic.Sfx
+
+<div class="container">
+    <h3>Music</h3>
+
+    <SearchBar Sfx="false"/>
+</div>
+
+@if (GenresTree != null)
+{
+    <div class="container mt-4 fade-in">
+        <div class="d-flex flex-row justify-content-between">
+            <h3>Tags</h3>
+            <a @onclick="ToggleAllTags" class="text-body-tertiary text-decoration-none clickable-link">toggle all</a>
+        </div>
+
+        @* TODO: Look into performance optimizations *@
+        <div class="row mt-2 p-1">
+            <GenreColumn Genres="@GenresTree[RootId].Take(GenresTree[RootId].Count / 3)" GenresTree="@GenresTree" Sfx="false"/>
+            <GenreColumn Genres="@GenresTree[RootId].GetRange(GenresTree[RootId].Count / 3, GenresTree[RootId].Count / 3)" GenresTree="@GenresTree" Sfx="false"/>
+            <GenreColumn Genres="@GenresTree[RootId].Skip(GenresTree[RootId].Count / 3 * 2)" GenresTree="@GenresTree" Sfx="false"/>
+        </div>
+    </div>
+}
 
 @code {
+    Dictionary<string, List<SfxGenre>>? GenresTree { get; set; }
+    const string RootId = "0";
+
+    protected override async Task OnInitializedAsync()
+    {
+        SfxGenreRoot? root = (await Http.GetFromJsonAsync<SfxGenreRoot>(HttpUtils.GetUrl("json/tags/?sfx_tag=false")));
+
+        if (root == null)
+        {
+            Console.WriteLine("Failed to fetch genre root");
+            return;
+        }
+
+        GenresTree = ResolveGenresTree(root.Genres);
+    }
     
+    private bool _allTags;
+    private void ToggleAllTags()
+    {
+        if(GenresTree == null)
+            return;
+        
+        _allTags = !_allTags;
+        GenresTree[RootId] = _allTags ? _allBaseGenres : _filteredBaseGenres;
+    }
+
+    private List<SfxGenre> _allBaseGenres = new List<SfxGenre>();
+    private List<SfxGenre> _filteredBaseGenres = new List<SfxGenre>();
+
+    private Dictionary<string, List<SfxGenre>> ResolveGenresTree(ICollection<SfxGenre> genres)
+    {
+        Dictionary<string, List<SfxGenre>> genreDictionary = new Dictionary<string, List<SfxGenre>>();
+
+        foreach (SfxGenre genre in genres)
+        {
+            string fatherGenreId = genre.FatherGenreId ?? RootId;
+
+            if (!genreDictionary.ContainsKey(fatherGenreId))
+                genreDictionary.Add(fatherGenreId, new List<SfxGenre>());
+
+            List<SfxGenre> genreList = genreDictionary[fatherGenreId];
+            genreList.Add(genre);
+        }
+
+        // Remove root genres that do not have children
+        _allBaseGenres = genreDictionary[RootId];
+        foreach (SfxGenre genre in genreDictionary[RootId])
+        {
+            if (genreDictionary.ContainsKey(genre.Id))
+            {
+                _filteredBaseGenres.Add(genre);
+            }
+        }
+        genreDictionary[RootId] = _filteredBaseGenres;
+
+        return genreDictionary;
+    }
 }
