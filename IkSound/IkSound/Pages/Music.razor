@@ -66,6 +66,9 @@
 
         foreach (SfxGenre genre in genres)
         {
+            if(genre.NumTracks == 0)
+                continue;
+            
             string fatherGenreId = genre.FatherGenreId ?? RootId;
 
             if (!genreDictionary.ContainsKey(fatherGenreId))
