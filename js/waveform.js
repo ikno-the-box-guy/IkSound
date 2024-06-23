@@ -19,29 +19,20 @@ window.drawWaveform = (waveformJson, canvas) => {
     for (let x = 0; x < waveform.length; x++) {
         const val = channel.max_sample(x);
 
-        ctx.lineTo(x + 0.5, scaleY(val, canvas.height) + 0.5);
+        ctx.lineTo(Math.fround(x + 0.5), Math.fround(scaleY(val, canvas.height) + 0.5));
     }
 
     // Loop backwards, drawing the lower half of the waveform
     for (let x = waveform.length - 1; x >= 0; x--) {
         const val = channel.min_sample(x);
 
-        ctx.lineTo(x + 0.5, scaleY(val, canvas.height) + 0.5);
+        ctx.lineTo(Math.fround(x + 0.5), Math.fround(scaleY(val, canvas.height) + 0.5));
     }
 
     ctx.closePath();
     
     ctx.strokeStyle = '#4B4E55';
     ctx.fillStyle = '#4B4E55';
-    
-    ctx.stroke();
-    ctx.fill();
-
-    ctx.beginPath();
-
-    ctx.moveTo(0, canvas.height / 2);
-    ctx.lineTo(canvas.width, canvas.height / 2);
-    ctx.closePath();
     
     ctx.stroke();
     ctx.fill();
