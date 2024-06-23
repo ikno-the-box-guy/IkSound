@@ -24,7 +24,7 @@
 @if(Songs != null && Songs.Count > 0)
 {
     <div class="container">
-        <div class="col" @onwheel="OnWheel" style="overflow-x: hidden">
+        <div class="d-flex flex-column gap-2" @onwheel="OnWheel" style="overflow-x: hidden">
             @foreach (Song song in Songs)
             {
                 <SongCard Song="@song" @key="song.Id"/>
@@ -33,7 +33,7 @@
         
             @if (Songs.Count < TotalHits && TotalHits > 0)
             {
-                <button class="btn fade-in wide-btn m-2" @onclick="LoadMore">Load more</button>
+                <button class="btn fade-in wide-btn" @onclick="LoadMore">Load more</button>
             }
             else
             {
@@ -54,6 +54,7 @@
     
     [Parameter] public string? SearchTerm { get; set; }
     [Parameter] public string? Genre { get; set; }
+    [Parameter] public string? Mood { get; set; }
     [Parameter] public bool Sfx { get; set; } = true;
     
     private bool IsLoading { get; set; }
@@ -71,9 +72,9 @@
     
     protected override async Task OnInitializedAsync()
     {
-        if(SearchTerm == null && Genre == null)
+        if(SearchTerm == null && Genre == null && Mood == null)
         {
-            NavigationManager.NavigateTo("/sounds");
+            NavigationManager.NavigateTo("");
         }
 
         Songs = (await LoadSongs())?.ToList() ?? new List<Song>();
@@ -100,8 +101,9 @@
     {
         string term = SearchTerm == null ? "" : $"&term={WebUtility.UrlEncode(SearchTerm)}";
         string genre = Genre == null ? "" : $"&genres={Genre}";
+        string mood = Mood == null ? "" : $"&moods={Mood}";
         
-        string url = $"json/search/{(Sfx ? "sfx" : "tracks")}/?limit={PageSize}&page={Page}{term}{genre}&order=desc&sort=relevance";
+        string url = $"json/search/{(Sfx ? "sfx" : "tracks")}/?limit={PageSize}&page={Page}{term}{genre}{mood}&order=desc&sort=relevance";
         
         Root? root = await Http.GetFromJsonAsync<Root>(HttpUtils.GetUrl(url));
 

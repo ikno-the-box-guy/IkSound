@@ -111,8 +111,7 @@ code {
     /*background: #181b1e;*/
     background-image: linear-gradient(90deg, #181b1e 20%, var(--gradient-end) 90%);
     /*transition: --gradient-end .1s ease-in-out;*/
-    
-    grid-template-columns: 2fr 4fr 4rem 1fr 11.5rem;
+    grid-template-columns: 3fr 4fr 4rem 1fr 11.5rem;
     gap: 1rem;
 }
 
@@ -164,12 +163,15 @@ code {
 .wide-btn {
     width: 100%;
     border-radius: 0;
+    border-width: 0;
     background-color: #181b1e;
     transition: background-color 0.1s ease-in-out;
 }
 
 .wide-btn:hover {
     background-color: #1d1e21;
+    border-radius: 0;
+    border-width: 0;
 }
 
 .cover-size{
@@ -219,6 +221,10 @@ code {
 
 .visible-trigger {
     display: block;
+}
+
+.clickable-link {
+    text-decoration: none !important;
 }
 
 .clickable-link:hover {

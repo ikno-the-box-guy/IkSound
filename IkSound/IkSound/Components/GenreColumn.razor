@@ -3,14 +3,14 @@
 <div class="col">
     @foreach(var genre in Genres)
     {
-        <a class="text-decoration-none text-body-emphasis clickable-link" href="search?genre=@genre.Slug&sfx=@Sfx" val>@genre.DisplayTag</a>
+        <a class="text-decoration-none text-body-emphasis clickable-link" href="search?genre=@genre.Slug&sfx=@Sfx">@genre.DisplayTag</a>
         if (GenresTree.TryGetValue(genre.Id, out List<SfxGenre>? subGenres))
         {
             <ul class="list-unstyled">
                 @foreach (var subGenre in subGenres)
                 {
                     <li>
-                        <a class="text-decoration-none text-body-tertiary clickable-link" href="search?genre=@subGenre.Slug&sfx=@Sfx" val>@subGenre.DisplayTag</a>
+                        <a class="text-decoration-none text-body-tertiary clickable-link" href="search?genre=@subGenre.Slug&sfx=@Sfx">@subGenre.DisplayTag</a>
                     </li>
                 }
             </ul>

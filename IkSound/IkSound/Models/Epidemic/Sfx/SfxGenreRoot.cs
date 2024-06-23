@@ -8,5 +8,5 @@ public class SfxGenreRoot
     public List<SfxGenre> Genres { get; set; }
 
     [JsonPropertyName("moods")]
-    public List<object> Moods { get; set; }
+    public List<Mood> Moods { get; set; }
 }

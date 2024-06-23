@@ -5,7 +5,7 @@
 
 @* TODO: Start resizing and hiding elements based on screen size *@
 
-<div class="song-container song-height w-100 d-grid m-2 fade-in gap-2" onmouseover="revealButtons('@Id')" onmouseout="hideButtons('@Id')">
+<div class="song-container song-height w-auto d-grid fade-in gap-2" onmouseover="revealButtons('@Id')" onmouseout="hideButtons('@Id')">
     <div class="d-flex gap-2 align-items-center song-height overflow-hidden">
         <span class="cover-size pointer" onclick="togglePlay('@Id')">
             <div class="cover-size audio-control" id="play-@Id" hidden>
@@ -36,12 +36,12 @@
         <span class="fs-7">@(Song.Length / 60):@((Song.Length % 60).ToString("D2"))</span>
     </div>
     
-    <div class="text-body-tertiary align-content-center overflow-hidden">
-        <span class="text-truncate w-100 fs-7 d-block">@GetGenres()</span>
-        <span class="text-truncate w-100 fs-7 d-block">@GetTags()</span>
+    <div class="align-content-center overflow-hidden">
+        <a class="text-truncate text-body-tertiary clickable-link w-100 fs-7 d-block" href="search?genre=@Genre.Slug&sfx=@Song.IsSfx">@Genre.DisplayTag</a>
+        <span class="text-truncate text-body-tertiary w-100 fs-7 d-block">@GetTags()</span>
     </div>
     
-    <div class="text-body-tertiary align-content-center d-flex flex-row">
+    <div class="text-body-tertiary align-content-center d-flex flex-row justify-content-between">
         <button class="h-100 empty-btn" onclick="navigator.clipboard.writeText('@Url');"><i class="bi bi-link-45deg fs-4"></i></button>
         <a class="h-100 empty-btn" href="@("https://corsproxy.io/?" + Song.Stems[SelectedStem].LqMp3Url)" download="@($"{Song.Title} ({SelectedStem})")" onclick="event.preventDefault(); window.download(this.href, this.download);"><i class="bi bi-download fs-5"></i></a>
         <button class="h-100 empty-btn" type="button" data-bs-toggle="modal" data-bs-target="#modal-@Id"><i class="bi bi-three-dots-vertical"></i></button>
@@ -73,6 +73,7 @@
     string SelectedStem { get; set; } = "full";
 
     string Url => $"https://www.epidemicsound.com/track/{Song.PublicSlug}";
+    private Genre Genre => Song.Genres.First();
 
     protected override void OnInitialized()
     {
@@ -82,11 +83,6 @@
     void OnStemChange(ChangeEventArgs e)
     {
         SelectedStem = e.Value?.ToString() ?? SelectedStem;
-    }
-
-    string GetGenres()
-    {
-        return string.Join(", ", Song.Genres);
     }
     
     string GetTags()

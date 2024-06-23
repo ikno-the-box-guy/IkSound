@@ -1,0 +1,29 @@
+﻿@using IkSound.Models.Epidemic.Sfx
+<div class="col">
+    @foreach (var mood in Moods)
+    {
+        <a class="text-decoration-none text-body-emphasis clickable-link" href="search?mood=@mood.Slug&sfx=false">@mood.DisplayTag</a>
+        if (MoodsTree.TryGetValue(mood.Id, out List<Mood>? subMoods))
+        {
+            <ul class="list-unstyled">
+                @foreach (var subMood in subMoods)
+                {
+                    <li>
+                        <a class="text-decoration-none text-body-tertiary clickable-link" href="search?mood=@subMood.Slug&sfx=false">@subMood.DisplayTag</a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <br/>
+        }
+    }
+</div>
+
+
+@code {
+    [Parameter] public Dictionary<int, List<Mood>> MoodsTree { get; set; }
+
+    [Parameter] public IEnumerable<Mood> Moods { get; set; }
+}

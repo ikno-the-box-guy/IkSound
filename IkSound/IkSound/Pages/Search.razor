@@ -1,16 +1,15 @@
 ﻿@page "/search"
 @using IkSound.Components
 
-@if(Genre != null)
-{
-    <SearchComponent SearchTerm="@Term" Genre="@Genre" Sfx="@Sfx" @key="Genre"/>
-} else if (Term != null)
-{
-    <SearchComponent SearchTerm="@Term" Sfx="@Sfx" @key="Term"/>
-}
+
+<SearchComponent SearchTerm="@Term" Genre="@Genre" Mood="@Mood" Sfx="@Sfx" @key="Key"/>
+
 
 @code {
     [Parameter] [SupplyParameterFromQuery] public string? Term { get; set; }
     [Parameter] [SupplyParameterFromQuery] public string? Genre { get; set; }
+    [Parameter] [SupplyParameterFromQuery] public string? Mood { get; set; }
     [Parameter] [SupplyParameterFromQuery] public bool Sfx { get; set; } = false;
+    
+    private string Key => $"{Term}-{Genre}-{Mood}-{Sfx}";
 }

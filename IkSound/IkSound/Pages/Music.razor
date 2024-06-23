@@ -13,26 +13,45 @@
     <SearchBar Sfx="false"/>
 </div>
 
-@if (GenresTree != null)
+@if (GenresTree != null && MoodsTree != null)
 {
     <div class="container mt-4 fade-in">
-        <div class="d-flex flex-row justify-content-between">
-            <h3>Tags</h3>
-            <a @onclick="ToggleAllTags" class="text-body-tertiary text-decoration-none clickable-link">toggle all</a>
+        <div class="text-center">
+            <button @onclick="() => TagsVisible = !TagsVisible" class="btn wide-btn w-25 mb-4">Show @(TagsVisible ? "themes" : "tags")</button>
         </div>
 
-        @* TODO: Look into performance optimizations *@
-        <div class="row mt-2 p-1">
-            <GenreColumn Genres="@GenresTree[RootId].Take(GenresTree[RootId].Count / 3)" GenresTree="@GenresTree" Sfx="false"/>
-            <GenreColumn Genres="@GenresTree[RootId].GetRange(GenresTree[RootId].Count / 3, GenresTree[RootId].Count / 3)" GenresTree="@GenresTree" Sfx="false"/>
-            <GenreColumn Genres="@GenresTree[RootId].Skip(GenresTree[RootId].Count / 3 * 2)" GenresTree="@GenresTree" Sfx="false"/>
+        <div hidden="@(!TagsVisible)">
+            <div class="d-flex flex-row justify-content-between">
+                <h3>Tags</h3>
+                <a @onclick="ToggleAllTags" class="text-body-tertiary text-decoration-none clickable-link">toggle all</a>
+            </div>
+
+            @* TODO: Look into performance optimizations *@
+            <div class="row mt-2 p-1">
+                <GenreColumn Genres="@GenresTree[RootId].Take(GenresTree[RootId].Count / 3)" GenresTree="@GenresTree" Sfx="false"/>
+                <GenreColumn Genres="@GenresTree[RootId].GetRange(GenresTree[RootId].Count / 3, GenresTree[RootId].Count / 3)" GenresTree="@GenresTree" Sfx="false"/>
+                <GenreColumn Genres="@GenresTree[RootId].Skip(GenresTree[RootId].Count / 3 * 2)" GenresTree="@GenresTree" Sfx="false"/>
+            </div>
+        </div>
+
+        <div hidden="@(TagsVisible)">
+            <h3>Themes</h3>
+
+            <div class="row mt-2 p-1">
+                <MoodColumn Moods="@MoodsTree[-1].Take(MoodsTree[-1].Count / 3)" MoodsTree="@MoodsTree"/>
+                <MoodColumn Moods="@MoodsTree[-1].GetRange(MoodsTree[-1].Count / 3, MoodsTree[-1].Count / 3)" MoodsTree="@MoodsTree"/>
+                <MoodColumn Moods="@MoodsTree[-1].Skip(MoodsTree[-1].Count / 3 * 2)" MoodsTree="@MoodsTree"/>
+            </div>
         </div>
     </div>
 }
 
 @code {
     Dictionary<string, List<SfxGenre>>? GenresTree { get; set; }
+    Dictionary<int, List<Mood>>? MoodsTree { get; set; }
     const string RootId = "0";
+
+    private bool TagsVisible { get; set; } = true; // True if tags are visible, false if moods are visible
 
     protected override async Task OnInitializedAsync()
     {
@@ -45,14 +64,16 @@
         }
 
         GenresTree = ResolveGenresTree(root.Genres);
+        MoodsTree = ResolveMoodsTree(root.Moods);
     }
-    
+
     private bool _allTags;
+
     private void ToggleAllTags()
     {
-        if(GenresTree == null)
+        if (GenresTree == null)
             return;
-        
+
         _allTags = !_allTags;
         GenresTree[RootId] = _allTags ? _allBaseGenres : _filteredBaseGenres;
     }
@@ -66,9 +87,9 @@
 
         foreach (SfxGenre genre in genres)
         {
-            if(genre.NumTracks == 0)
+            if (genre.NumTracks == 0)
                 continue;
-            
+
             string fatherGenreId = genre.FatherGenreId ?? RootId;
 
             if (!genreDictionary.ContainsKey(fatherGenreId))
@@ -87,8 +108,27 @@
                 _filteredBaseGenres.Add(genre);
             }
         }
+
         genreDictionary[RootId] = _filteredBaseGenres;
 
         return genreDictionary;
+    }
+
+    private Dictionary<int, List<Mood>> ResolveMoodsTree(ICollection<Mood> moods)
+    {
+        Dictionary<int, List<Mood>> moodDictionary = new Dictionary<int, List<Mood>>();
+
+        foreach (Mood mood in moods)
+        {
+            int fatherMoodId = mood.FatherMoodId ?? -1;
+
+            if (!moodDictionary.ContainsKey(fatherMoodId))
+                moodDictionary.Add(fatherMoodId, new List<Mood>());
+
+            List<Mood> moodList = moodDictionary[fatherMoodId];
+            moodList.Add(mood);
+        }
+        
+        return moodDictionary;
     }
 }
