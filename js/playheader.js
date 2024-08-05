@@ -38,16 +38,24 @@ window.hideButtons = function (id) {
     pause.hidden = true;
 }
 
-window.manageWaveformClick = function(event, div, id){
+window.manageWaveformClick = async function(event, div, id){
     let audio = document.getElementById("audio-" + id);
-    
-    // get mouse position relative to the waveform div
+
+    audio.load()
+    // Ensure the audio metadata is loaded before proceeding
+    if (audio.readyState < 1) {
+        await new Promise(resolve => {
+            audio.addEventListener('loadedmetadata', resolve, { once: true });
+        });
+    }
+
+    // get mouse position relative to the waveform div    
     let rect = div.getBoundingClientRect();
     let x = event.clientX - rect.left;
     let width = div.offsetWidth;
     let percentage = x / width;
     let time = percentage * audio.duration;
-    
+
     if(!Number.isNaN(time))
         playAt(audio, id, time);
 }
