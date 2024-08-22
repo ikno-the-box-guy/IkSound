@@ -6,6 +6,9 @@ public class Song
 {
     [JsonPropertyName("id")]
     public int Id { get; set; }
+    
+    [JsonPropertyName("kosmosId")]
+    public string KosmosId { get; set; }
 
     [JsonPropertyName("title")]
     public string Title { get; set; }
@@ -68,7 +71,7 @@ public class Song
     public CoverArt CoverArt { get; set; }
 
     [JsonPropertyName("releaseDate")]
-    public DateTime ReleaseDate { get; set; }
+    public DateTime? ReleaseDate { get; set; }
 
     [JsonPropertyName("segmentGroups")]
     public List<SegmentGroup> SegmentGroups { get; set; }

@@ -72,7 +72,10 @@
     Guid Id { get; set; } = Guid.NewGuid();
     string SelectedStem { get; set; } = "full";
 
-    string Url => $"https://www.epidemicsound.com/track/{Song.PublicSlug}";
+    string Url => Song.IsSfx ? 
+            $"https://www.epidemicsound.com/sound-effects/tracks/{Song.KosmosId}" : 
+            $"https://www.epidemicsound.com/track/{Song.PublicSlug}";
+
     private Genre Genre => Song.Genres.First();
 
     protected override void OnInitialized()
