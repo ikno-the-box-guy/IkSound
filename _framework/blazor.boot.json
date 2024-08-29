@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "IkSound",
   "resources": {
-    "hash": "sha256-6e46q2yU3eknAgc+YQzShiLFBjdjXCWb0NZjTvN+OTQ=",
+    "hash": "sha256-b+ErQU7LxTnhpX+8mY6CufcgUPt6OqzQiBKW9n+fPpE=",
     "jsModuleNative": {
       "dotnet.native.8.0.8.746giovk6l.js": "sha256-juC5sA7gHTLXFEhAKgdM2/RavswpwCtDfjYGsAz2FXg="
     },
@@ -17,7 +17,7 @@
       "icudt_no_CJK.dat": "sha256-L7sV7NEYP37/Qr2FPCePo5cJqRgTXRwGHuwF5Q+0Nfs="
     },
     "assembly": {
-      "IkSound.wasm": "sha256-PGRLsmMCBu/UMQWjGk3X07XEMeWArzh5JhK9DtE0gsM=",
+      "IkSound.wasm": "sha256-75hQRLbaRY6d8Hh0tbj7N/a0MAt4hLW2WoYxAibt2UU=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-OA0x3jtO571XOSHD+dH4EFMXBj9OlAUSIsjha6SnYdA=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-WdOF6cNamqH+9r+X6JQ1vQxBgVjpxqb7QB07OHKmrmU=",
       "Microsoft.AspNetCore.Components.WebAssembly.wasm": "sha256-M3UdZugn6VXjstpGoSdyG7fbZDKJdAs/IllJsILRYSg=",
@@ -37,7 +37,7 @@
       "System.ComponentModel.wasm": "sha256-GPAg/lqvtlGqfal3j6EPgQ+6mqlusQ30qCeS8LYv8ws=",
       "System.Console.wasm": "sha256-QHe8t7pzS3aKv7Rq1PExAOQxd+JQD/3/JZv3/XwjQ+A=",
       "System.Diagnostics.DiagnosticSource.wasm": "sha256-+si+b9xgSpZHtbXpte2kZl8Tv89oikiKZ50AtSEbFmU=",
-      "System.Linq.wasm": "sha256-04m1YTFLFpBklDpxPrp76+81CwBCHPU/FyOWbqnc9dI=",
+      "System.Linq.wasm": "sha256-431s11vJmAxMuS6cG8wHZ6InO6UJUa/3P3zYbc5Ux6c=",
       "System.Memory.wasm": "sha256-6/G11vxTbcriqPUK7g+vWDhKlVduFde+WxaUB0NL0z4=",
       "System.Net.Http.Json.wasm": "sha256-3bW8kRcdjuU6qJ4KfJtKvffShSQtAgTeL7ouij6KeBQ=",
       "System.Net.Http.wasm": "sha256-mMqqeJ7r5dsIHTrU+ndonRi5WnMM5sC2os6zKkvOMmU=",
