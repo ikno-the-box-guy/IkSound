@@ -19,7 +19,7 @@
         <div class="d-flex flex-column overflow-hidden">
             @* TODO: Fix individual width problem *@
             <a class="clickable-link text-truncate fs-6 text-body text-decoration-none" href="@Url">@Song.Title</a>
-            @if (!Song.IsSfx)
+            @if (!Song.IsSfx && Song.Creatives["mainArtists"].Length > 0)
             {
                 <a class="clickable-link text-truncate fs-7 text-body-tertiary text-decoration-none" href="@("https://www.epidemicsound.com/artists/" + Song.Creatives["mainArtists"][0].Slug)">@Song.Creatives["mainArtists"][0]</a>
             }
@@ -37,7 +37,14 @@
     </div>
     
     <div class="align-content-center overflow-hidden">
-        <a class="text-truncate text-body-tertiary clickable-link w-100 fs-7 d-block" href="search?genre=@Genre.Slug&sfx=@Song.IsSfx">@Genre.DisplayTag</a>
+        @if (Genre != null)
+        {
+            <a class="text-truncate text-body-tertiary clickable-link w-100 fs-7 d-block" href="search?genre=@Genre.Slug&sfx=@Song.IsSfx">@Genre.DisplayTag</a>
+        }
+        else
+        {
+            <span class="text-truncate text-body-tertiary w-100 fs-7 d-block fst-italic">No genre</span>
+        }
         <span class="text-truncate text-body-tertiary w-100 fs-7 d-block">@GetTags()</span>
     </div>
     
@@ -76,7 +83,7 @@
             $"https://www.epidemicsound.com/sound-effects/tracks/{Song.KosmosId}" : 
             $"https://www.epidemicsound.com/track/{Song.PublicSlug}";
 
-    private Genre Genre => Song.Genres.First();
+    private Genre? Genre => Song.Genres.FirstOrDefault();
 
     protected override void OnInitialized()
     {
