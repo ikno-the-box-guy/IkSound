@@ -34,7 +34,7 @@ const route = useRoute()
   <p class="mt-4">Here are some CORS proxies you could use:</p>
   
   <ul class="mt-4 list-disc ml-5">
-    <li><a href="https://corsproxy.io/">https://corsproxy.io/?</a> <span class="text-gray-500">(recommended, may get rate limited when making lots of requests quickly)</span></li>
+    <li><a href="https://corsproxy.io/">https://corsproxy.io/?</a> <span class="text-gray-500">(recommended, seems to have a caching issue though)</span></li>
     <li><a href="https://cors-anywhere-64h4.onrender.com/">https://cors-anywhere-64h4.onrender.com/</a> <span class="text-gray-500">(my proxy, may take a few seconds to start up if no requests have been made in a while)</span></li>
     <li><a href="https://corsproxy.github.io/">https://crossorigin.me/</a> <span class="text-gray-500">(meant for development only)</span></li>
   </ul>

@@ -3,7 +3,7 @@ import {api} from "./api.js";
 
 const corsProxy = useStorage(
     'cors-proxy',
-    'https://corsproxy.io/?',
+    'https://cors-anywhere-64h4.onrender.com/',
     localStorage,
     {
         mergeDefaults: true,
