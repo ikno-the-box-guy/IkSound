@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  overflow-y: scroll !important;
+}
+
+.bg-body {
+  background-color: rgb(33, 37, 41);
+  color: #dee2e6;
+}
+
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+.fade-in {
+  animation:fadeIn .3s ease-in 0s 1 normal forwards;
+}
+
+.clickable-link {
+  @apply cursor-pointer hover:underline;
+}
+
+.text-secondary {
+  color: rgba(222, 226, 230, 0.5);
+}
