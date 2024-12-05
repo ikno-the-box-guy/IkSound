@@ -1,4 +1,4 @@
-﻿import { createWebHistory, createRouter } from 'vue-router'
+﻿import {createWebHistory, createRouter, createWebHashHistory} from 'vue-router'
 import HomePage from "./pages/HomePage.vue";
 import NotFoundPage from "./pages/NotFoundPage.vue";
 import SoundsPage from "./pages/search/SoundsPage.vue";
@@ -16,7 +16,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHashHistory(import.meta.env.BASE_URL),
     routes,
 })
 
