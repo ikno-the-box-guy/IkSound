@@ -9,6 +9,9 @@ on:
 jobs:
   build_vue:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./iksound-vue
     name: Build Vue
     steps:
       - uses: actions/checkout@v4
