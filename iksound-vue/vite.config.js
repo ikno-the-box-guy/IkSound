@@ -6,5 +6,5 @@ export default defineConfig({
     plugins: [
         vue(),
     ],
-    base: '/IkSound/',
+    base: "/IkSound/",
 })
