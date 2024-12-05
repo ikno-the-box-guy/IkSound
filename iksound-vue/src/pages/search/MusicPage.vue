@@ -1,43 +1,19 @@
 ﻿<script setup>
 import {onMounted, ref} from "vue";
 import {api} from "../../api.js";
-import GenreItem from "../../components/GenreItem.vue";
 import Searchbar from "../../components/Searchbar.vue";
+import TagItem from "../../components/TagItem.vue";
+import {buildTagTree, splitIntoColumns} from "../../tags.js";
 
 const genres = ref();
+const moods = ref();
 
-const buildGenreTree = (flatGenres) => {
-  const genreMap = new Map();
-
-  flatGenres.forEach((genre) => {
-    genre.children = [];
-    genreMap.set(genre.id, genre);
-  });
-
-  const tree = [];
-
-  flatGenres.forEach((genre) => {
-    if (genre.fatherGenreId && genreMap.has(genre.fatherGenreId)) {
-      genreMap.get(genre.fatherGenreId).children.push(genre);
-    } else {
-      tree.push(genre); // No parent or parent not found, add to root
-    }
-  });
-
-  return tree;
-}
-
-const splitIntoColumns = (items, numColumns) => {
-  const columns = Array.from({ length: numColumns }, () => []);
-  items.forEach((item, index) => {
-    columns[index % numColumns].push(item);
-  });
-  return columns;
-}
+const genresVisible = ref(true);
 
 const fetchGenres = () => {
   api.get('json/tags/?sfx_tag=false').then((response) => {
-    genres.value = buildGenreTree(response.data.genres);
+    genres.value = buildTagTree(response.data.genres, 'Genre');
+    moods.value = buildTagTree(response.data.moods, 'Mood');
   });
 }
 
@@ -46,16 +22,24 @@ onMounted(fetchGenres);
 
 <template>
   <div class="px-6 lg:px-24">
-    <h3 class="text-3xl">Music</h3>
+    <h3 class="text-3xl">Search Music</h3>
     <Searchbar/>
 
-    <div class="flex flex-row mt-2 w-full flex-wrap gap-4" v-if="genres">
-      <ul class="fade-in col-auto flex-grow" v-for="(column, index) in splitIntoColumns(genres, 3)" :key="index">
-        <GenreItem v-for="genre in column" :key="genre.id" :genre="genre" class="mt-2"></GenreItem>
-      </ul>
+    <div class="mt-8 fade-in" v-if="moods && genres">
+      <div class="flex flex-row justify-between items-baseline">
+        <h2 class="text-3xl">{{genresVisible ? 'Genres' : 'Moods'}}</h2>
+        <button class="clickable-link text-secondary" @click="genresVisible = !genresVisible">Switch genre/mood</button>
+      </div>
+      <div class="flex flex-row mt-2 w-full flex-wrap gap-4 px-px">
+        <ul :class="[{'hidden': !genresVisible},'col-auto flex-grow']" v-for="(column, index) in splitIntoColumns(genres, 3)" :key="'genre-'+index">
+          <TagItem v-for="genre in column" :key="genre.id" :tag="genre" class="mt-2" type="genre"></TagItem>
+        </ul>
+        <ul :class="[{'hidden': genresVisible},'col-auto flex-grow']" v-for="(column, index) in splitIntoColumns(moods, 3)" :key="'mood-'+index">
+          <TagItem v-for="mood in column" :key="mood.id" :tag="mood" class="mt-2" type="mood"></TagItem>
+        </ul>
+      </div>
     </div>
   </div>
-
 </template>
 
 <style scoped>

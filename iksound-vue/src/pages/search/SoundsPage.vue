@@ -1,43 +1,15 @@
 ﻿<script setup>
 import {onMounted, ref} from "vue";
 import {api} from "../../api.js";
-import GenreItem from "../../components/GenreItem.vue";
 import Searchbar from "../../components/Searchbar.vue";
+import {buildTagTree, splitIntoColumns} from "../../tags.js";
+import TagItem from "../../components/TagItem.vue";
 
 const genres = ref();
 
-const buildGenreTree = (flatGenres) => {
-  const genreMap = new Map();
-
-  flatGenres.forEach((genre) => {
-    genre.children = [];
-    genreMap.set(genre.id, genre);
-  });
-
-  const tree = [];
-
-  flatGenres.forEach((genre) => {
-    if (genre.fatherGenreId && genreMap.has(genre.fatherGenreId)) {
-      genreMap.get(genre.fatherGenreId).children.push(genre);
-    } else {
-      tree.push(genre); // No parent or parent not found, add to root
-    }
-  });
-
-  return tree;
-}
-
-const splitIntoColumns = (items, numColumns) => {
-  const columns = Array.from({ length: numColumns }, () => []);
-  items.forEach((item, index) => {
-    columns[index % numColumns].push(item);
-  });
-  return columns;
-}
-
 const fetchGenres = () => {
   api.get('json/tags/?sfx_tag=true').then((response) => {
-    genres.value = buildGenreTree(response.data.genres);
+    genres.value = buildTagTree(response.data.genres, 'Genre');
   });
 }
 
@@ -49,10 +21,13 @@ onMounted(fetchGenres);
     <h3 class="text-3xl">Sound Effects</h3>
     <Searchbar is-sfx/>
 
-    <div class="flex flex-row mt-2 w-full flex-wrap gap-4" v-if="genres">
-      <ul class="fade-in col-auto flex-grow" v-for="(column, index) in splitIntoColumns(genres, 3)" :key="index">
-        <GenreItem v-for="genre in column" :key="genre.id" :genre="genre" is-sfx class="mt-2"></GenreItem>
-      </ul>
+    <div class="mt-8 fade-in" v-if="genres">
+      <h2 class="text-3xl">Genres</h2>
+      <div class="flex flex-row mt-2 w-full flex-wrap gap-4 px-px">
+        <ul class="col-auto flex-grow" v-for="(column, index) in splitIntoColumns(genres, 3)" :key="'genre-'+index">
+          <TagItem v-for="genre in column" :key="genre.id" :tag="genre" class="mt-2" type="genre"></TagItem>
+        </ul>
+      </div>
     </div>
   </div>
   
