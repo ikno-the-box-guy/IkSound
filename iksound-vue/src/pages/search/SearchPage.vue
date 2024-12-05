@@ -14,6 +14,7 @@ const playing = ref(false);
 const progress = ref(0);
 const page = ref(1);
 const loading = ref(false);
+const totalPages = ref(-1);
 let animationFrameId;
 
 const loadTracks = async (page) => {
@@ -39,6 +40,7 @@ const loadTracks = async (page) => {
     const newTracks = Object.values(response.data.entities.tracks);
     tracks.value.push(...newTracks);
     loading.value = false;
+    totalPages.value = response.data.meta.totalPages;
   });
 }
 
@@ -145,13 +147,18 @@ onBeforeUnmount(() => {
 <audio ref="audio"/>
   
 <div class="2xl:px-16">
+  <div v-if="totalPages === 0" class="fade-in w-full text-center">
+    <strong>No results found...</strong>
+    <p class="text-secondary">Try searching something else</p>
+  </div>
+  
   <ul class="flex flex-col gap-2">
     <li v-for="track in tracks" :key="track.id">
       <TrackComponent :track="track" @play="playTrack(track)" @pause="pauseTrack" @play-at="(at) => playAt(track, at)" :play-progress="playingTrack === track ? progress : null" :playing="playingTrack === track && playing"/>
     </li>
   </ul>
   
-  <button v-if="tracks.length !== 0" @click="loadMore" class="fade-in" id="load-more">
+  <button v-if="tracks.length !== 0 && totalPages > page" @click="loadMore" class="fade-in" id="load-more">
     Load more
   </button>
 </div>

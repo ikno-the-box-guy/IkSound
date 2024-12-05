@@ -6,7 +6,7 @@ const route = useRoute()
 
 <template>
 <div class="px-8">
-  <div v-if="route.query.error" class="mb-4 border border-red-700 rounded-lg p-4 bg-red-600 bg-opacity-30  flex-row">
+  <div v-if="route.query.error" class="mb-4 border border-red-700 rounded-lg p-4 bg-red-600 bg-opacity-30 flex-row">
     <h4>Oops, an error occurred while fetching, probably cors related...</h4>
     <p>Try changing your cors proxy using the instructions below.</p>
     <p v-if="route.query.from" class="mt-4">
