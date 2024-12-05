@@ -24,4 +24,4 @@ jobs:
         with:
           username: 'ikno-the-box-guy'
           reponame: 'IkSound'
-          token: ${{ secrets.GITHUB_TOKEN }
+          token: ${{ secrets.GITHUB_TOKEN }}
