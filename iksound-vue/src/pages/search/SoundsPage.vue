@@ -25,7 +25,7 @@ onMounted(fetchGenres);
       <h2 class="text-3xl">Genres</h2>
       <div class="flex flex-row mt-2 w-full flex-wrap gap-4 px-px">
         <ul class="col-auto flex-grow" v-for="(column, index) in splitIntoColumns(genres, 3)" :key="'genre-'+index">
-          <TagItem v-for="genre in column" :key="genre.id" :tag="genre" class="mt-2" type="genre"></TagItem>
+          <TagItem v-for="genre in column" :key="genre.id" :tag="genre" class="mt-2" type="genre" is-sfx></TagItem>
         </ul>
       </div>
     </div>
