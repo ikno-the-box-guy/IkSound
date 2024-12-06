@@ -139,8 +139,8 @@ const handleWaveformClick = (e) => {
     </div>
 
     <div class="content-center overflow-hidden w-32 text-secondary text-sm ms-10 me-4 hidden md:block">
-      <a v-if="track.genres[0]" class="clickable-link w-full block truncate"
-         :href="`search?genre=${track.genres[0].slug}&sfx=${track.isSfx}`">{{ track.genres[0].displayTag }}</a>
+      <RouterLink v-if="track.genres[0]" class="clickable-link w-full block truncate"
+         :to="`search?genre=${track.genres[0].slug}&sfx=${track.isSfx}`">{{ track.genres[0].displayTag }}</RouterLink>
       <span v-else class="w-full fs-7 d-block fst-italic">No genre</span>
       <span v-if="!track.isSfx" class="w-full fs-7 block truncate">{{ moods }}</span>
     </div>
