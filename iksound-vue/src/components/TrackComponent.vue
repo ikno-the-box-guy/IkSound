@@ -1,8 +1,9 @@
 ﻿<script setup>
-import {computed} from "vue";
+import {computed, watch} from "vue";
 import AudioPlayer from "./AudioPlayer.vue";
 import Waveform from "./Waveform.vue";
 import corsProxy from "../corsSetting.js";
+import router from "../router.js";
 
 const props = defineProps(
     {
@@ -139,8 +140,8 @@ const handleWaveformClick = (e) => {
     </div>
 
     <div class="content-center overflow-hidden w-32 text-secondary text-sm ms-10 me-4 hidden md:block">
-      <RouterLink v-if="track.genres[0]" class="clickable-link w-full block truncate"
-         :to="`search?genre=${track.genres[0].slug}&sfx=${track.isSfx}`">{{ track.genres[0].displayTag }}</RouterLink>
+      <button v-if="track.genres[0]" class="clickable-link w-full block truncate"
+         @click.prevent="router.push(`search?genre=${track.genres[0].slug}&sfx=${track.isSfx}`); router.go(0)">{{ track.genres[0].displayTag }}</button>
       <span v-else class="w-full fs-7 d-block fst-italic">No genre</span>
       <span v-if="!track.isSfx" class="w-full fs-7 block truncate">{{ moods }}</span>
     </div>
