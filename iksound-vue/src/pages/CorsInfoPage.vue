@@ -10,7 +10,7 @@ const route = useRoute()
     <h4>Oops, an error occurred while fetching, probably cors related...</h4>
     <p>Try changing your cors proxy using the instructions below.</p>
     <p v-if="route.query.from" class="mt-4">
-      Updated your proxy: <a :href="`#${route.query.from}`">Go back</a>
+      Updated your proxy? <router-link :to="route.query.from">Go back</router-link>
     </p>
   </div>
   

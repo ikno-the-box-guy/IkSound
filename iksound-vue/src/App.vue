@@ -1,5 +1,8 @@
 <script setup>
 import Sidebar from "./components/Sidebar.vue";
+import {useRoute} from "vue-router";
+
+const route = useRoute();
 </script>
 
 <template>
@@ -14,7 +17,7 @@ import Sidebar from "./components/Sidebar.vue";
       </div>
 
       <article class="py-4 px-6">
-        <RouterView/>
+        <RouterView  :key="route.fullPath"/>
       </article>
     </main>
   </div>

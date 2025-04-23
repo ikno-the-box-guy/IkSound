@@ -15,8 +15,9 @@ const progress = ref(0);
 const page = ref(1);
 const loading = ref(false);
 const totalPages = ref(-1);
-
-const displayGenre = ref('');
+const totalHits = ref(-1);
+const headGenre = ref('');
+const subGenre = ref('');
 
 let animationFrameId;
 
@@ -43,9 +44,16 @@ const loadTracks = async (page) => {
     const newTracks = Object.values(response.data.entities.tracks);
     tracks.value.push(...newTracks);
     loading.value = false;
-    totalPages.value = response.data.meta.totalPages;
     
-    displayGenre.value = response.data.meta.aggregations.genres[0].displayKey;
+    totalPages.value = response.data.meta.totalPages;
+    totalHits.value = response.data.meta.totalHits;
+    
+    if (genre) {
+      const genres = response.data.meta.aggregations.genres;
+      
+      headGenre.value = genres[0]?.displayKey;
+      subGenre.value = genres.find(g => g.key === genre)?.displayKey;
+    }
   });
 }
 
@@ -152,13 +160,14 @@ onBeforeUnmount(() => {
 <audio ref="audio"/>
 <div class="2xl:px-16">
 
-  <h1 v-if="route.query.genre && displayGenre" class="fade-in">
-    {{route.query.sfx.toLowerCase() === 'true' ? 'Sound Effects' : 'Music'}}
+  <h1 v-if="route.query.genre && headGenre" class="fade-in text-secondary !text-lg my-2">
+    {{ route.query.sfx.toLowerCase() === 'true' ? 'Sound Effects' : 'Music' }}
     /
-    {{displayGenre}}
+    {{ headGenre }}
+    {{ subGenre !== headGenre ? `/ ${subGenre}` : '' }}
   </h1>
-  <h1 v-else-if="route.query.term && totalPages > 0" class="fade-in">
-    Searching for: <i>{{route.query.term}}</i>
+  <h1 v-else-if="route.query.term && totalHits > 0" class="fade-in text-secondary !text-lg my-2">
+    <span class="text-gray-300">{{totalHits}}</span> results for <i class="text-gray-300">"{{route.query.term}}"</i>
   </h1>
 
   <div v-if="totalPages === 0" class="fade-in w-full text-center">
