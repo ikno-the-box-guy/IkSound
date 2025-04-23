@@ -16,7 +16,7 @@ const route = useRoute();
         <a href="https://github.com/ikno-the-box-guy/IkSound" target="_blank" class="text-blue-500 hover:underline">About</a>
       </div>
 
-      <article class="py-4 px-6">
+      <article class="py-4 ps-4 pe-0 lg:px-6">
         <RouterView  :key="route.fullPath"/>
       </article>
     </main>

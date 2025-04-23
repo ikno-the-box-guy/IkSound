@@ -101,7 +101,7 @@ const handleWaveformClick = (e) => {
 </script>
 
 <template>
-  <div class="song-container h-14 w-auto flex flex-row fade-in gap-2 group overflow-hidden">
+  <div class="song-container h-14 w-auto flex flex-row fade-in lg:gap-2 group overflow-hidden">
     <div class="flex gap-2 items-center h-14 overflow-hidden">
       <div class="inline size-14 cursor-pointer">
         <div class="audio-control hidden group-hover:block" @click="play">
@@ -115,9 +115,9 @@ const handleWaveformClick = (e) => {
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5"/>
           </svg>
         </div>
-        <img class="size-14" :src="track.coverArt.baseUrl + track.coverArt.sizes.XS" :alt="track.title"/>
+        <img class="size-14 max-w-fit" :src="track.coverArt.baseUrl + track.coverArt.sizes.XS" :alt="track.title"/>
       </div>
-      <div class="flex-col overflow-hidden 2xl:w-80 xl:w-64 w-32 flex mr-2">
+      <div class="flex-col overflow-hidden 2xl:w-80 xl:w-64 w-32 max-sm:w-64 flex mr-2">
         <a class="clickable-link truncate" :href="url">{{ track.title }}</a>
         <a v-if="track.creatives.mainArtists && track.creatives.mainArtists.length > 0"
            class="clickable-link truncate text-sm text-secondary"
@@ -127,26 +127,26 @@ const handleWaveformClick = (e) => {
       </div>
     </div>
 
-    <div class="content-center h-14 relative cursor-pointer flex-grow hidden lg:flex" @click="handleWaveformClick">
+    <div class="content-center h-14 relative cursor-pointer flex-grow hidden min-[900px]:flex" @click="handleWaveformClick">
       <span v-if="playProgress !== null" class="h-full absolute z-10 w-px bg-white top-0 left-0 smooth-move" :style="`left: ${playProgress * 100}%;`"></span>
       <Waveform :waveform-url="track.stems.full.waveformUrl"/>
     </div>
 
-    <div class="text-secondary content-center">
+    <div class="text-secondary content-center hidden lg:block">
       <span
           class="text-sm">{{ Math.floor(track.length / 60) }}:{{
           track.length % 60 < 10 ? '0' : ''
         }}{{ track.length % 60 }}</span>
     </div>
 
-    <div class="content-center overflow-hidden w-32 text-secondary text-sm ms-10 me-4 hidden md:block">
+    <div class="content-center overflow-hidden w-32 text-secondary text-sm xl:ms-10 mx-4 hidden min-[801px]:block max-[900px]:ms-auto">
       <router-link v-if="track.genres[0]" class="clickable-link w-full block truncate" :to="`search?genre=${track.genres[0].slug}&sfx=${track.isSfx}`">{{ track.genres[0].displayTag }}</router-link>
       <span v-else class="w-full fs-7 d-block fst-italic">No genre</span>
       <span v-if="!track.isSfx" class="w-full fs-7 block truncate">{{ moods }}</span>
     </div>
 
-    <div class="text-secondary content-center flex flex-row justify-between">
-      <button class="h-full empty-btn" @click="copy">
+    <div class="text-secondary content-center flex flex-row justify-between max-[800px]:ms-auto max-[800px]:me-4">
+      <button class="h-full empty-btn hidden xl:block" @click="copy">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
              class="size-6">
           <path stroke-linecap="round" stroke-linejoin="round"
