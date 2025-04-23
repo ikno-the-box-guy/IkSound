@@ -15,6 +15,9 @@ const progress = ref(0);
 const page = ref(1);
 const loading = ref(false);
 const totalPages = ref(-1);
+
+const displayGenre = ref('');
+
 let animationFrameId;
 
 const loadTracks = async (page) => {
@@ -41,6 +44,8 @@ const loadTracks = async (page) => {
     tracks.value.push(...newTracks);
     loading.value = false;
     totalPages.value = response.data.meta.totalPages;
+    
+    displayGenre.value = response.data.meta.aggregations.genres[0].displayKey;
   });
 }
 
@@ -145,8 +150,17 @@ onBeforeUnmount(() => {
 
 <template>
 <audio ref="audio"/>
-  
 <div class="2xl:px-16">
+
+  <h1 v-if="route.query.genre && displayGenre" class="fade-in">
+    {{route.query.sfx.toLowerCase() === 'true' ? 'Sound Effects' : 'Music'}}
+    /
+    {{displayGenre}}
+  </h1>
+  <h1 v-else-if="route.query.term && totalPages > 0" class="fade-in">
+    Searching for: <i>{{route.query.term}}</i>
+  </h1>
+
   <div v-if="totalPages === 0" class="fade-in w-full text-center">
     <strong>No results found...</strong>
     <p class="text-secondary">Try searching something else</p>
