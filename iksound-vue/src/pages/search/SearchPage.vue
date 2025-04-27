@@ -3,7 +3,7 @@
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import {api} from "../../api.js";
 import {useRoute} from "vue-router";
-import TrackComponent from "../../components/TrackComponent.vue";
+import TrackComponent from "../../components/TrackListItem.vue";
 
 const route = useRoute();
 

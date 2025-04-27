@@ -72,10 +72,6 @@ const play = () => {
   }
 };
 
-const copy = () => {
-  navigator.clipboard.writeText(url);
-}
-
 const download = () => {
   fetch(corsProxy.value + props.track.stems.full.lqMp3Url)
       .then(response => response.blob())
@@ -118,9 +114,10 @@ const handleWaveformClick = (e) => {
         <img class="size-14 max-w-fit" :src="track.coverArt.baseUrl + track.coverArt.sizes.XS" :alt="track.title"/>
       </div>
       <div class="flex-col overflow-hidden 2xl:w-80 xl:w-64 w-32 max-sm:w-64 flex mr-2">
-        <a class="clickable-link truncate" :href="url">{{ track.title }}</a>
+        <RouterLink class="clickable-link truncate" :to="`track/${track.publicSlug}`">{{ track.title }}</RouterLink>
         <a v-if="track.creatives.mainArtists && track.creatives.mainArtists.length > 0"
            class="clickable-link truncate text-sm text-secondary"
+           target="_blank"
            :href="`https://www.epidemicsound.com/artists/${track.creatives.mainArtists[0].slug}`">{{
             track.creatives.mainArtists[0].name
           }}</a>
@@ -133,26 +130,23 @@ const handleWaveformClick = (e) => {
     </div>
 
     <div class="text-secondary content-center hidden lg:block">
-      <span
-          class="text-sm">{{ Math.floor(track.length / 60) }}:{{
-          track.length % 60 < 10 ? '0' : ''
-        }}{{ track.length % 60 }}</span>
+      <span class="text-sm">
+        {{ Math.floor(track.length / 60) }}:{{track.length % 60 < 10 ? '0' : '' }}{{ track.length % 60 }}
+      </span>
     </div>
 
     <div class="content-center overflow-hidden w-32 text-secondary text-sm xl:ms-10 mx-4 hidden min-[801px]:block max-[900px]:ms-auto">
-      <router-link v-if="track.genres[0]" class="clickable-link w-full block truncate" :to="`search?genre=${track.genres[0].slug}&sfx=${track.isSfx}`">{{ track.genres[0].displayTag }}</router-link>
+      <RouterLink v-if="track.genres[0]" class="clickable-link w-full block truncate" :to="`search?genre=${track.genres[0].slug}&sfx=${track.isSfx}`">{{ track.genres[0].displayTag }}</RouterLink>
       <span v-else class="w-full fs-7 d-block fst-italic">No genre</span>
       <span v-if="!track.isSfx" class="w-full fs-7 block truncate">{{ moods }}</span>
     </div>
 
     <div class="text-secondary content-center flex flex-row justify-between max-[800px]:ms-auto max-[800px]:me-4">
-      <button class="h-full empty-btn hidden xl:block" @click="copy">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-             class="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round"
-                d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"/>
+      <a class="h-full empty-btn hidden xl:block" :href="url" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
         </svg>
-      </button>
+      </a>
       <a class="h-full empty-btn" :href="track.stems.full.lqMp3Url" :download="track.title" @click.prevent="download">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
              class="size-6">
