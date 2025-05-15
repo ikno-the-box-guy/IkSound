@@ -1,7 +1,12 @@
 ﻿<script setup>
 import {useRoute} from "vue-router";
+import corsProxy from "../corsSetting.js";
 
 const route = useRoute()
+
+const setProxy = (e) => {
+  corsProxy.value = e.srcElement.href;
+}
 </script>
 
 <template>
@@ -34,12 +39,11 @@ const route = useRoute()
   <p class="mt-4">Here are some CORS proxies you could use:</p>
   
   <ul class="mt-4 list-disc ml-5">
-    <li><a href="https://corsproxy.io/">https://corsproxy.io/?</a> <span class="text-gray-500">(recommended, seems to have a caching issue though)</span></li>
-    <li><a href="https://cors-anywhere-64h4.onrender.com/">https://cors-anywhere-64h4.onrender.com/</a> <span class="text-gray-500">(my proxy, may take a few seconds to start up if no requests have been made in a while)</span></li>
-    <li><a href="https://corsproxy.github.io/">https://crossorigin.me/</a> <span class="text-gray-500">(meant for development only)</span></li>
+    <li><a href="https://ikcors.azurewebsites.net/api/proxy/" @click.prevent="setProxy">https://ikcors.azurewebsites.net/api/proxy/</a> <span class="text-gray-500">(recommended, faster proxy)</span></li>
+    <li><a href="https://corsproxy.io/?" @click.prevent="setProxy">https://corsproxy.io/?</a> <span class="text-gray-500">(for development only, downloading does not work)</span></li>
   </ul>
   
-  <p class="mt-4">Use these by copying the text content and putting them in the text box at the bottom of the sidebar, or click on them to read more about these specific proxies.</p>
+  <p class="mt-4">You can set them as current proxy by clicking on the url, or by copy pasting them (or your own) into the text box on the bottom of the sidebar.</p>
 </div>
 </template>
 

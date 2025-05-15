@@ -7,7 +7,24 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-    config.baseURL = corsProxy.value + config.baseURL
+    // Construct the full URL manually
+    const fullUrl = new URL(config.url, config.baseURL);
+
+    // Append query params manually if present
+    if (config.params) {
+        Object.entries(config.params).forEach(([key, value]) => {
+            if (value)
+                fullUrl.searchParams.append(key, value);
+        });
+    }
+
+    // URL-encode the entire URL
+    const encodedUrl = encodeURIComponent(fullUrl.toString());
+
+    // Replace the config to use the proxy + encoded URL
+    config.baseURL = ''; // Clear baseURL so axios uses the full URL
+    config.url = corsProxy.value + encodedUrl;
+
     return config;
 });
 

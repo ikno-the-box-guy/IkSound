@@ -1,9 +1,8 @@
 ﻿import {useStorage} from "@vueuse/core";
-import {api} from "./api.js";
 
 const corsProxy = useStorage(
-    'cors-proxy',
-    'https://corsproxy.io/?',
+    'cors-proxy-url',
+    'https://ikcors.azurewebsites.net/api/proxy/',
     localStorage,
     {
         mergeDefaults: true,

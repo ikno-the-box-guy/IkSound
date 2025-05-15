@@ -4,6 +4,7 @@ import AudioPlayer from "./AudioPlayer.vue";
 import Waveform from "./Waveform.vue";
 import corsProxy from "../corsSetting.js";
 import router from "../router.js";
+import {download} from "../utils.js";
 
 const props = defineProps(
     {
@@ -61,9 +62,14 @@ const props = defineProps(
 
 const emit = defineEmits(['play', 'pause', 'playAt']);
 
-const url = props.track.isSfx ?
-    `https://www.epidemicsound.com/sound-effects/tracks/${props.track.kosmosId}` :
-    `https://www.epidemicsound.com/track/${props.track.publicSlug}`;
+const url = computed(() => {
+  if (!props.track.value) return '';
+  
+  return props.track.value.isSfx ?
+      `https://www.epidemicsound.com/sound-effects/tracks/${props.track.value.kosmosId}` :
+      `https://www.epidemicsound.com/track/${props.track.value.publicSlug}`;
+})
+
 const play = () => {
   if (props.playing) {
     emit('pause');
@@ -71,20 +77,6 @@ const play = () => {
     emit('play');
   }
 };
-
-const download = () => {
-  fetch(corsProxy.value + props.track.stems.full.lqMp3Url)
-      .then(response => response.blob())
-      .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = props.track.isSfx ? props.track.title : props.track.title + ' - ' + props.track.creatives.mainArtists[0].name;
-        a.click();
-        window.URL.revokeObjectURL(url);
-        a.remove();
-      });
-}
 
 const moods = computed(() =>
     props.track.moods.map(mood => mood.displayTag).join(', ')
@@ -97,7 +89,7 @@ const handleWaveformClick = (e) => {
 </script>
 
 <template>
-  <div class="song-container h-14 w-auto flex flex-row fade-in lg:gap-2 group overflow-hidden">
+  <div class="bg-gradient bg-gradient-hover h-14 w-auto flex flex-row fade-in lg:gap-2 group overflow-hidden">
     <div class="flex gap-2 items-center h-14 overflow-hidden">
       <div class="inline size-14 cursor-pointer">
         <div class="audio-control hidden group-hover:block" @click="play">
@@ -147,7 +139,7 @@ const handleWaveformClick = (e) => {
           <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
         </svg>
       </a>
-      <a class="h-full empty-btn" :href="track.stems.full.lqMp3Url" :download="track.title" @click.prevent="download">
+      <a class="h-full empty-btn" :href="track.stems.full.lqMp3Url" :download="track.title" @click.prevent="download(props.track)">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
              class="size-6">
           <path stroke-linecap="round" stroke-linejoin="round"
@@ -170,16 +162,6 @@ const handleWaveformClick = (e) => {
   syntax: '<color>';
   initial-value: #212529;
   inherits: false;
-}
-
-.song-container {
-  /*background: #181b1e;*/
-  background-image: linear-gradient(90deg, #181b1e 20%, var(--gradient-end) 90%);
-  /*transition: --gradient-end .1s ease-in-out;*/
-}
-
-.song-container:hover {
-  --gradient-end: #181b1e;
 }
 
 .audio-control {

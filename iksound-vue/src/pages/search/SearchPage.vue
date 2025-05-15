@@ -1,6 +1,6 @@
 ﻿<script setup>
 
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import {api} from "../../api.js";
 import {useRoute} from "vue-router";
 import TrackComponent from "../../components/TrackListItem.vue";
@@ -51,8 +51,8 @@ const loadTracks = async (page) => {
     if (genre) {
       const genres = response.data.meta.aggregations.genres;
       
-      headGenre.value = genres[0]?.displayKey;
-      subGenre.value = genres.find(g => g.key === genre)?.displayKey;
+      headGenre.value = genres[0];
+      subGenre.value = genres.find(g => g.key === genre);
     }
   });
 }
@@ -136,6 +136,10 @@ const loadMore = () => {
   loadTracks(page.value)
 }
 
+const isSfx = computed(() => {
+  return route.query.sfx.toLowerCase() === 'true';
+});
+
 onMounted(() => {
   loadTracks(page.value);
 
@@ -161,10 +165,17 @@ onBeforeUnmount(() => {
 <div class="2xl:px-16">
 
   <h1 v-if="route.query.genre && headGenre" class="fade-in text-secondary !text-lg my-2">
-    {{ route.query.sfx.toLowerCase() === 'true' ? 'Sound Effects' : 'Music' }}
+    <RouterLink class="clickable-link" :to="isSfx ? 'sounds' : 'music'">
+      {{ isSfx ? 'Sound Effects' : 'Music' }}
+    </RouterLink>
     /
-    {{ headGenre }}
-    {{ subGenre !== headGenre ? `/ ${subGenre}` : '' }}
+    <RouterLink class="clickable-link" v-if="subGenre.key !== headGenre.key" :to="{ path: 'search', query: { ...route.query, genre: headGenre.key }, }">
+      {{ headGenre.displayKey }}
+    </RouterLink>
+    <span v-else>
+      {{ headGenre.displayKey }}
+    </span>
+    {{ subGenre.key !== headGenre.key ? `/ ${subGenre.displayKey}` : '' }}
   </h1>
   <h1 v-else-if="route.query.term && totalHits > 0" class="fade-in text-secondary !text-lg my-2">
     <span class="text-gray-300">{{totalHits}}</span> results for <i class="text-gray-300">"{{route.query.term}}"</i>
